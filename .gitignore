@@ -1,4 +1,8 @@
 # Ignore IDE vars
 .vs/
+
 # Igonre bin folder
 bin/
+
+# Ignore gitignore
+.gitignore
