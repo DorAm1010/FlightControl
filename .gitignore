@@ -1,0 +1,4 @@
+# Ignore IDE vars
+.vs/
+# Igonre bin folder
+bin/
