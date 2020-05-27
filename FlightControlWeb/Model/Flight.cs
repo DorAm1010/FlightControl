@@ -6,17 +6,6 @@ namespace FlightControlWeb.Model
     {
         public Flight() { }
 
-        public Flight(FlightPlan plan)
-        {
-            Id =            plan.id;
-            Longitude =     plan.longitude;
-            Latitude =      plan.latitude;
-            Passengers =    plan.Passengers;
-            CompanyName =   plan.CompanyName;
-            DateTime =      plan.DateTime.Parse(dateTime);
-            IsExternal =    plan.isExternal;
-        }
-
         public Flight(string id, double longitude, double latitude,
             int passangers, string companyName, string dateTime, bool isExternal)
         {

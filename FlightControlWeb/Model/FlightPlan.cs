@@ -40,6 +40,11 @@ namespace FlightControlWeb.Model
             return false;
         }
 
+        internal string GetCurrentDateTime()
+        {
+            throw new NotImplementedException();
+        }
+
         public Tuple<double, double> Interpolate(DateTime relative_to)
         {
             double relativeLongitude, relativeLatitude;
