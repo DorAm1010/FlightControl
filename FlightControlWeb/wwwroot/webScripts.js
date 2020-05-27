@@ -127,7 +127,8 @@ function sortFlights(flight) {
 }
 
 // receive all flights from server
-function initFlights() {
+function initFlights(event) {
+    //let flighturl = "../api/Flights?relative_to==2020-5-26T12:00:00Z&sync_all";
     let flighturl = "../api/Flights?relative_to==2020-5-26T12:00:00Z&sync_all";
     $.getJSON(flighturl)
         .done(function (flights) {

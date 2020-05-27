@@ -10,6 +10,7 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class FlightsController : ControllerBase
     {
+        private MockFlightsDB mockdb = new MockFlightsDB();
         private IDataBase<string, FlightPlan> _dataBase;
         public FlightsController(IDataBase<string, FlightPlan> dataBase)
         {
@@ -34,8 +35,8 @@ namespace FlightControlWeb.Controllers
                     flights.Add(flight);
                 }
             }
-
-            return null;
+            
+            return mockdb.GetFlights();
         }
 
         // DELETE: api/ApiWithActions/id
