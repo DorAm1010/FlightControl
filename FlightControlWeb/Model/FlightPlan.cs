@@ -33,7 +33,7 @@ namespace FlightControlWeb.Model
             // total flight duration in seconds
             int totalTimeInSec = Segments.Sum(segment => segment.TimeSpan);
             // difference between time of departure and time of request
-            int relativeDifferenceInSecs = (int) Math.Abs(relative_to.Subtract(timeOfDeparture).TotalSeconds);
+            int relativeDifferenceInSecs = (int)Math.Abs(relative_to.Subtract(timeOfDeparture).TotalSeconds);
             if (totalTimeInSec > relativeDifferenceInSecs)
                 return true;
 
@@ -42,7 +42,18 @@ namespace FlightControlWeb.Model
 
         public Tuple<double, double> Interpolate(DateTime relative_to)
         {
-            //double
+            double relativeLongitude, relativeLatitude;
+            int totalTime = 0;
+            int relativeDifferenceInSecs = (int)Math.Abs(relative_to.Subtract(InitialLocation.DateTime).TotalSeconds);
+            int timePassedInFlight = 0;
+            for (int i = 0; i < Segments.Count; i++)
+            {
+                timePassedInFlight += Segments[i].TimeSpan;
+                if (timePassedInFlight >= relativeDifferenceInSecs)
+                {
+
+                }
+            }
             return new Tuple<double, double>(1.0, 2.0);
         }
 
@@ -62,11 +73,6 @@ namespace FlightControlWeb.Model
             if (flightId.Length > 10)
                 flightId = flightId.ToCharArray().Take(10).ToString();
             return flightId;
-        }
-
-        public string GetCurrentDateTime()
-        {
-            return null;
         }
     }
 }

@@ -18,42 +18,31 @@ namespace FlightControlWeb.DataBase
 
         public void DeleteById(string id)
         {
-            hashtable.Remove(id);
+            if (hashtable.ContainsKey(id))
+                hashtable.Remove(id);
         }
 
         public IEnumerable<FlightPlan> GetAllValues()
         {
+            if (hashtable.Values.Count == 0)
+                return null;
             List<FlightPlan> values = hashtable.Values.Cast<FlightPlan>().ToList();
             return values;
         }
 
         public IEnumerable<string> GetAllKeys()
         {
+            if (hashtable.Keys.Count == 0)
+                return null;
             List<string> values = hashtable.Keys.Cast<string>().ToList();
             return values;
         }
 
         public FlightPlan GetById(string id)
         {
-            return (FlightPlan)hashtable[id];
+            if (hashtable.ContainsKey(id))
+                return (FlightPlan)hashtable[id];
+            return null;
         }
-
-/*        public string HashId(FlightPlan plan)
-        {
-            // get hash code of initial location and date and convert it to hexaecimal representation
-            int locationHash = (plan.InitialLocation.Longitude + plan.InitialLocation.Latitude).GetHashCode();
-            int dateHash = plan.InitialLocation.DateTime.GetHashCode();
-            int hash = dateHash + locationHash;
-            // get uppercase hexadecimal representation
-            string idCode = hash.ToString("X");
-            // get all capital letters from company name
-            string idLetters = string.Concat(plan.CompanyName.Where(capital => capital >= 'A' && capital <= 'Z'));
-            string flightId = idLetters + idCode;
-            
-            // if id is longer than 10 characters
-            if (flightId.Length > 10)
-                flightId = flightId.ToCharArray().Take(10).ToString();
-            return flightId;
-        }*/
     }
 }

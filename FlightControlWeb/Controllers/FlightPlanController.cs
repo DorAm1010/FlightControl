@@ -13,7 +13,7 @@ namespace FlightControlWeb.Controllers
         {
             _dataBase = dataBase;
         }
-        
+
         // GET: api/FlightPlan/{flight_id_format}
         [HttpGet("{id}", Name = "Get")]
         public FlightPlan Get(string id)
@@ -33,8 +33,8 @@ namespace FlightControlWeb.Controllers
         //[HttpDelete("{id}")]
         //public IActionResult Delete(string id)
         //{
-            //_dataBase.DeleteById(id);
-          //  return Ok(id);
+        //_dataBase.DeleteById(id);
+        //  return Ok(id);
         //}
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FlightControlWeb.Client
 {
-    public class Client : IClient
+    public class FlightClient : IFlightClient
     {
         public IEnumerable<Flight> Get(DateTime dateTime)
         {

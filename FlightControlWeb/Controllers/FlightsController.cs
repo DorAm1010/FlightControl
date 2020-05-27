@@ -24,7 +24,7 @@ namespace FlightControlWeb.Controllers
             bool isExternal = Request.QueryString.Value.Contains("sync_all");
             List<Flight> flights = new List<Flight>();
             List<FlightPlan> flightPlans = (List<FlightPlan>)_dataBase.GetAllValues();
-            foreach(FlightPlan plan in flightPlans)
+            foreach (FlightPlan plan in flightPlans)
             {
                 if (plan.InFlightRelativeTo(relative_to))
                 {
@@ -34,7 +34,7 @@ namespace FlightControlWeb.Controllers
                     flights.Add(flight);
                 }
             }
-            
+
             return null;
         }
 
