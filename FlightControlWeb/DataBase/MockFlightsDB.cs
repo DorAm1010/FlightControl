@@ -21,7 +21,7 @@ namespace FlightControlWeb.DataBase
                         IsExternal = false,
                         Latitude = 32.345,
                         Longitude = 34.654,
-                        Passangers = 233
+                        Passengers = 233
                     };
                 case 123456789:
                     return new Flight
@@ -32,7 +32,7 @@ namespace FlightControlWeb.DataBase
                         IsExternal = false,
                         Latitude = 29.4564573,
                         Longitude = 36.63568658,
-                        Passangers = 144
+                        Passengers = 144
                     };
                 case 987654321:
                     return new Flight
@@ -43,7 +43,7 @@ namespace FlightControlWeb.DataBase
                         IsExternal = false,
                         Latitude = 2.333345,
                         Longitude = 38.9,
-                        Passangers = 256
+                        Passengers = 256
                     };
                 default:
                     return new Flight
@@ -54,7 +54,7 @@ namespace FlightControlWeb.DataBase
                         IsExternal = false,
                         Latitude = 69.420,
                         Longitude = 7.77,
-                        Passangers = 1
+                        Passengers = 1
                     };
             }
         }
@@ -70,7 +70,7 @@ namespace FlightControlWeb.DataBase
                 IsExternal = false,
                 Latitude = 32.345,
                 Longitude = 34.654,
-                Passangers = 233
+                Passengers = 233
             },
             new Flight
             {
@@ -80,7 +80,7 @@ namespace FlightControlWeb.DataBase
                 IsExternal = false,
                 Latitude = 29.4564573,
                 Longitude = 36.63568658,
-                Passangers = 144
+                Passengers = 144
             },
             new Flight
             {
@@ -90,7 +90,7 @@ namespace FlightControlWeb.DataBase
                 IsExternal = false,
                 Latitude = 2.333345,
                 Longitude = 38.9,
-                Passangers = 256
+                Passengers = 256
             },
             new Flight
             {
@@ -100,7 +100,7 @@ namespace FlightControlWeb.DataBase
                 IsExternal = false,
                 Latitude = 69.420,
                 Longitude = 7.77,
-                Passangers = 1
+                Passengers = 1
             },
         };
             return flights;

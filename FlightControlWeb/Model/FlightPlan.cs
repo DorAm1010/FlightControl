@@ -42,7 +42,7 @@ namespace FlightControlWeb.Model
 
         public Tuple<double, double> Interpolate(DateTime relative_to)
         {
-            double
+            //double
             return new Tuple<double, double>(1.0, 2.0);
         }
 

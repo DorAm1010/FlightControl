@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <script src="webScripts.js?v=2"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -37,56 +38,56 @@
             <div class="col-md-3">
                 <button onclick="addMyFlightsT(event)">init!</button>
                 <h1 style="font-size:20px">My Flights</h1>
-                    <table class="table table-sm table-hover" id="myFlightsT" ondrop="internDrop(event);" ondragover="dragOverHandler(event);">
-                        <thead>
-                            <tr>
-                                <th scope="col">Flight ID</th>
-                                <th scope="col">Company</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
+                <table class="table table-sm table-hover" id="myFlightsT" ondrop="internDrop(event);" ondragover="dragOverHandler(event);">
+                    <thead>
+                        <tr>
+                            <th scope="col">Flight ID</th>
+                            <th scope="col">Company</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
+        </div>
         <!-- Bottom half of screen -->
         <div class="row">
             <!-- For 'Flight Details' -->
             <div class="col-md-9">
                 <h1 style="font-size:20px">Flight Details</h1>
-                    <table class="table table-md table-hover" id="flightDetails">
-                        <thead>
-                            <tr>
-                                <th scope="col">Flight ID</th>
-                                <th scope="col">Company</th>
-                                <th scope="col">Source</th>
-                                <th scope="col">Destination</th>
-                                <th scope="col">Takeoff time</th>
-                                <th scope="col">Landing time</th>
-                                <th scope="col">Passengers</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- For External Flights -->
+                <table class="table table-md table-hover" id="flightDetails">
+                    <thead>
+                        <tr>
+                            <th scope="col">Flight ID</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Source</th>
+                            <th scope="col">Destination</th>
+                            <th scope="col">Takeoff time</th>
+                            <th scope="col">Landing time</th>
+                            <th scope="col">Passengers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <!-- For External Flights -->
             <div class="col-md-3">
                 <h1 style="font-size:20px">External Flights</h1>
-                    <table class="table table-sm table-hover" id="externFlightsT" ondrop="externDrop(event);" ondragover="dragOverHandler(event);">
-                        <thead>
-                            <tr>
-                                <th scope="col">Flight ID</th>
-                                <th scope="col">Company</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
+                <table class="table table-sm table-hover" id="externFlightsT" ondrop="externDrop(event);" ondragover="dragOverHandler(event);">
+                    <thead>
+                        <tr>
+                            <th scope="col">Flight ID</th>
+                            <th scope="col">Company</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
-            </div>
+        </div>
+    </div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYRuCXSwOYf9EMT6RP5AtWpe6beY9BRrU&callback=initMap" async defer></script>
-    <script src="webScripts.js?v=2"></script>
+    <script src="mapScripts.js?v=2"></script>
 </body>
 </html>
