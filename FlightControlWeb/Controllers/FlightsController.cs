@@ -3,17 +3,24 @@ using Microsoft.AspNetCore.Mvc;
 using FlightControlWeb.Model;
 using FlightControlWeb.DataBase;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace FlightControlWeb.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/Flights")]
     public class FlightsController : ControllerBase
     {
-        private IDataBase<string, FlightPlan> _dataBase;
-        public FlightsController(IDataBase<string, FlightPlan> dataBase)
+        private IDataBase<string, FlightPlan> _flightPlansDataBase;
+        private IDataBase<string, Server> _serversDataBase;
+
+        //private MockFlightsDB mock = new MockFlightsDB();
+        public FlightsController(IDataBase<string, FlightPlan> flightPlansDataBase, IDataBase<string, Server> serversDataBase)
         {
-            _dataBase = dataBase;
+            _flightPlansDataBase = flightPlansDataBase;
+            _serversDataBase = serversDataBase;
         }
 
         // GET: api/Flights?relative_to=<DATE_TIME>
@@ -22,27 +29,48 @@ namespace FlightControlWeb.Controllers
         public IEnumerable<Flight> Get([FromQuery] DateTime relative_to)
         {
             bool isExternal = Request.QueryString.Value.Contains("sync_all");
+            DateTime universal = relative_to.ToUniversalTime();
             List<Flight> flights = new List<Flight>();
-            List<FlightPlan> flightPlans = (List<FlightPlan>)_dataBase.GetAllValues();
-            foreach (FlightPlan plan in flightPlans)
+            List<string> flightsIDs = (List<string>)_flightPlansDataBase.GetAllKeys();
+            foreach (string id in flightsIDs)
             {
-                if (plan.InFlightRelativeTo(relative_to))
+                FlightPlan plan = _flightPlansDataBase.GetById(id);
+                if (plan.InFlightRelativeTo(universal))
                 {
                     var tuple = plan.Interpolate(relative_to);
-                    Flight flight = new Flight(plan.HashId(), tuple.Item1, tuple.Item2,
-                        plan.Passengers, plan.CompanyName, plan.GetCurrentDateTime(), false);
+                    Flight flight = new Flight(id, tuple.Item1, tuple.Item2,
+                        plan.Passengers, plan.CompanyName, universal, false);
                     flights.Add(flight);
                 }
             }
-
-            return null;
+            if (isExternal)
+                flights.AddRange(GetExternalFlights(universal).Result);
+            //return mock.GetFlights();
+            return flights;
         }
 
-        // DELETE: api/ApiWithActions/id
+        private async Task<List<Flight>> GetExternalFlights(DateTime relative_to)
+        {
+            HttpClient client = new HttpClient();
+            List<Flight> flights = new List<Flight>();
+            foreach(Server server in _serversDataBase.GetAllValues())
+            {
+                HttpResponseMessage response = await client.GetAsync(server.Url + "/" + relative_to.ToString());
+                if (response.IsSuccessStatusCode)
+                {
+                    string flightsString = await response.Content.ReadAsStringAsync();
+                    flights.AddRange(JsonConvert.DeserializeObject<List<Flight>>(flightsString));
+                }
+            }
+            return flights;
+        }
+
+        // DELETE: api/Flights/id
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            return Ok();
+            _flightPlansDataBase.DeleteById(id);
+            return Ok("Flight With ID: " + id + "Has Been Deleted");
         }
     }
 }

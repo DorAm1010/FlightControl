@@ -1,4 +1,3 @@
-using FlightControlWeb.Client;
 using FlightControlWeb.DataBase;
 using FlightControlWeb.Model;
 using Microsoft.AspNetCore.Builder;
@@ -24,7 +23,6 @@ namespace FlightControlWeb
             services.AddRouting();
             services.AddMemoryCache();
             services.AddSingleton(typeof(IDataBase<string, FlightPlan>), typeof(FlightPlansDB));
-            services.AddSingleton(typeof(IFlightClient), typeof(FlightClient));
             services.AddSingleton(typeof(IDataBase<string, Server>), typeof(ServersDB));
             services.AddControllers();
         }

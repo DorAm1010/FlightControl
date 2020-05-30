@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FlightControlWeb.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/servers")]
     [ApiController]
     public class ServersController : ControllerBase
     {
@@ -39,8 +39,8 @@ namespace FlightControlWeb.Controllers
             _dataBase.DeleteById(id);
             var deleted = _dataBase.GetById(id);
             if (deleted == null)
-                return Ok();
-            return StatusCode(500);
+                return Ok("Server With ID: " + id + "Has Been Deleted");
+            return BadRequest("Server With ID: "+ id + "Does Not Exist!");
         }
     }
 }

@@ -1,14 +1,12 @@
 ﻿using FlightControlWeb.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FlightControlWeb.DataBase
 {
     public class MockFlightsDB
     {
-        public Flight GetFlightById(uint id)
+        public Flight GetFlightById(int id)
         {
             switch (id)
             {
@@ -39,7 +37,7 @@ namespace FlightControlWeb.DataBase
                     {
                         Id = "SA1212",
                         CompanyName = "FlatEarthSociety",
-                        DateTime = DateTime.Parse("0000-04-20T23:12:33Z"),
+                        DateTime = DateTime.Parse("0001-04-20T23:12:33Z"),
                         IsExternal = false,
                         Latitude = 2.333345,
                         Longitude = 38.9,
@@ -50,7 +48,7 @@ namespace FlightControlWeb.DataBase
                     {
                         Id = "EL0909",
                         CompanyName = "YallaMaccabi",
-                        DateTime = DateTime.Parse("1906-08-08T12:10:99Z"),
+                        DateTime = DateTime.Parse("1906-08-08T12:10:09Z"),
                         IsExternal = false,
                         Latitude = 69.420,
                         Longitude = 7.77,
@@ -86,7 +84,7 @@ namespace FlightControlWeb.DataBase
             {
                 Id = "SA1212",
                 CompanyName = "FlatEarthSociety",
-                DateTime = DateTime.Parse("0000-04-20T23:12:33Z"),
+                DateTime = DateTime.Parse("1234-04-20T23:12:33Z"),
                 IsExternal = false,
                 Latitude = 2.333345,
                 Longitude = 38.9,
@@ -96,7 +94,7 @@ namespace FlightControlWeb.DataBase
             {
                 Id = "EL0909",
                 CompanyName = "YallaMaccabi",
-                DateTime = DateTime.Parse("1906-08-08T12:10:99Z"),
+                DateTime = DateTime.Parse("1906-08-08T12:10:45Z"),
                 IsExternal = false,
                 Latitude = 69.420,
                 Longitude = 7.77,

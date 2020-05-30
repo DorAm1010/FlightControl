@@ -7,14 +7,14 @@ namespace FlightControlWeb.Model
         public Flight() { }
 
         public Flight(string id, double longitude, double latitude,
-            int passangers, string companyName, string dateTime, bool isExternal)
+            int passangers, string companyName, DateTime dateTime, bool isExternal)
         {
             Id = id;
             Longitude = longitude;
             Latitude = latitude;
             Passengers = passangers;
             CompanyName = companyName;
-            DateTime = DateTime.Parse(dateTime);
+            DateTime = dateTime;
             IsExternal = isExternal;
         }
 
