@@ -24,7 +24,7 @@ namespace FlightControlWeb.Controllers
             return _dataBase.GetById(id);
         }
 
-        // api/FlightPlan?destination
+        // api/FlightPlan?id=<ID>&locations
 
         // POST: api/FlightPlan
         [HttpPost]
