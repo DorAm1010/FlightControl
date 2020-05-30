@@ -1,15 +1,15 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <script src="webScripts.js?v=2" async defer></script>
     <script src="mapScripts.js?v=2" async defer></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYRuCXSwOYf9EMT6RP5AtWpe6beY9BRrU&callback=initMap" async defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsjtC2fvACm2adotT7dfFunu6MdpBqXQs&callback=initMap" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js" ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" ></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <meta name="viewport" content="initial-scale=1.0">
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default" ></script>
     <meta charset="utf-8">
     <style>
         /* Always set the map height explicitly to define the size of the div
@@ -25,6 +25,11 @@
             margin: 0;
             padding: 0;
         }
+        .popover {
+            text-align: center;
+            text-size-adjust: auto;
+            text-decoration-color: white;
+        }
     </style>
     <title></title>
 </head>
@@ -38,7 +43,7 @@
             </div>
             <!-- For 'My Flights' -->
             <div class="col-md-3">
-                <button onclick="initFlights(event)">init!</button>
+                <button onclick="addMyFlightsT(event)">init!</button>
                 <h1 style="font-size:20px">My Flights</h1>
                 <table class="table table-sm table-hover" id="myFlightsT" ondrop="internDrop(event);" ondragover="dragOverHandler(event);">
                     <thead>

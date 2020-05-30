@@ -75,47 +75,72 @@ let flightPlan2 =
 let localFlightsManager = [flight1, flight2];
 let localFlightPlans = [flightPlan1, flightPlan2];
 
-let myFlightsT = document.getElementById("myFlightsT");
+//let myFlightsT = document.getElementById("myFlightsT");
 let numberOfFlights;
-function addMyFlightsT(flight) {
+function addMyFlightsT(event) {
+    let myFlightsT = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
+    localFlightsManager.forEach(function (flight) {
         let row = myFlightsT.insertRow();
-        //let deletePop;
         let idCell = row.insertCell();
         let companyCell = row.insertCell();
         let tdText;
+        let delB = "<button id=${flight.flight_id} value=X></button>";
+        //let delB = document.createElement("button");
+        //delB.id = flight.flight_id;
+        //delB.value = "X";
+        //delB.setAttribute("class", "btn btn-danger");
+        //delB.setAttribute("onclick", "deleteFlight(event)");
         row.setAttribute("onclick", "showFlightDetails(event)");
-        idCell.setAttribute("id", "flight.flight_id");
-        idCell.setAttribute("onmouseover", "raisePopup(event)");
-        companyCell.setAttribute("id", "flight.flight_id")
-        companyCell.setAttribute("onmouseover", "raisePopup(event)")
+        row.setAttribute("data-toggle", "popover");
+        idCell.id = flight.flight_id;
+        companyCell.id = flight.flight_id;
         tdText = document.createTextNode(flight.flight_id);
         idCell.appendChild(tdText);
         tdText = document.createTextNode(flight.company_name);
         companyCell.appendChild(tdText);
-        //deletePop.setAttribute("style", "display: none");
-        //row.appendChild()
+        //row.appendChild(delB);
+        updatePopovers(delB);
+    });
 }
 
-let externFlightsT = document.getElementById("externFlightsT");
+function updatePopovers(delB) {
+    window.alert(delB.id);
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+            animation: true,
+            placement: "auto",
+            trigger: "hover focus",
+            content: delB,
+            html: true,
+            delay: { "show": 400, "hide": 1000 }
+        })
+    });
+}
+
 function addExternalFlightsT(flight) {
-        let row = externFlightsT.insertRow();
-        //let deletePop;
-        let idCell = row.insertCell();
-        let companyCell = row.insertCell();
-        let tdText;
-        row.setAttribute("onclick", "showFlightDetails(event)");
-        idCell.setAttribute("id", "flight.flight_id");
-        idCell.setAttribute("onmouseover", "raisePopup(event)");
-        companyCell.setAttribute("id", "flight.flight_id")
-        companyCell.setAttribute("onmouseover", "raisePopup(event)")
-        tdText = document.createTextNode(flight.flight_id);
-        idCell.appendChild(tdText);
-        tdText = document.createTextNode(flight.company_name);
-        companyCell.appendChild(tdText);
-        //deletePop.setAttribute("style", "display: none");
-        //row.appendChild()
+    let externFlightsT = document.getElementById("externFlightsT");
+    let row = externFlightsT.insertRow();
+    //let deletePop;
+    let idCell = row.insertCell();
+    let companyCell = row.insertCell();
+    let tdText;
+    row.setAttribute("onclick", "showFlightDetails(event)");
+    row.setAttribute("data-toggle", "tooltip");
+    row.setAttribute("data-placement", "uptop");
+    idCell.setAttribute("id", "flight.flight_id");
+   // idCell.setAttribute("onmouseover", "raisePopup(event)");
+    companyCell.setAttribute("id", "flight.flight_id")
+   // companyCell.setAttribute("onmouseover", "raisePopup(event)")
+    tdText = document.createTextNode(flight.flight_id);
+    idCell.appendChild(tdText);
+    tdText = document.createTextNode(flight.company_name);
+    companyCell.appendChild(tdText);
+    //deletePop.setAttribute("style", "display: none");
+    //row.appendChild()
 }
 
+
+// sort flights to relevant table
 function sortFlights(flight) {
     if (flight.is_external === true) {
         addExternalFlightsT(flight)
@@ -127,8 +152,9 @@ function sortFlights(flight) {
 }
 
 // receive all flights from server
-function initFlights() {
-    let flighturl = "../api/Flights?relative_to==2020-5-26T12:00:00Z&sync_all";
+function initFlights(event) {
+    //let flighturl = "../api/Flights?relative_to==2020-5-26T12:00:00Z&sync_all";
+    let flighturl = "../api/Flights";
     $.getJSON(flighturl)
         .done(function (flights) {
             flights.forEach(function (flight) {
@@ -140,7 +166,7 @@ function initFlights() {
             });
         })
         .fail(function (reason) {
-            //raiseNotification(reason);
+            console.log("Failed loading flights");
         });
 }
 
@@ -187,16 +213,13 @@ function highlightCancel(event) {
     clicked = false;
 }
 
-function raisePopup() {
 
+function deleteFlight(event) {
+    window.alert(event.target.id);
 }
 
-function deleteFlight(flightID) {
-    window.alert(row.flight_id);
-}
-
-let flightDetails = document.getElementById("flightDetails");
-function showFlightDetails(ev) {
+function showFlightDetails(event) {
+    let flightDetails = document.getElementById("flightDetails");
     localFlightPlans.forEach(function (flightPlan) {
         let row = flightDetails.insertRow();
         let idCell = row.insertCell();
