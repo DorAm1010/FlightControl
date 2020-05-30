@@ -77,9 +77,9 @@ let localFlightPlans = [flightPlan1, flightPlan2];
 
 //let myFlightsT = document.getElementById("myFlightsT");
 let numberOfFlights;
-function addMyFlightsT(event) {
+function addMyFlightsT(flight) {
     let myFlightsT = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
-    localFlightsManager.forEach(function (flight) {
+    //localFlightsManager.forEach(function (flight) {
         let row = myFlightsT.insertRow();
         let idCell = row.insertCell();
         let companyCell = row.insertCell();
