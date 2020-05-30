@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace FlightControlWeb.Model
 {
@@ -18,9 +20,13 @@ namespace FlightControlWeb.Model
             Segments = segments;
         }
 
+        [JsonProperty("passengers")]
         public int Passengers { get; set; }
+        [JsonProperty("company_name")]
         public string CompanyName { get; set; }
+        [JsonProperty("initial_location")]
         public InitialLocation InitialLocation { get; set; }
+        [JsonProperty("segments")]
         public List<Segment> Segments { get; set; }
 
         public bool InFlightRelativeTo(DateTime relative_to)
@@ -40,38 +46,56 @@ namespace FlightControlWeb.Model
             return false;
         }
 
-        internal string GetCurrentDateTime()
-        {
-            throw new NotImplementedException();
-        }
-
         public Tuple<double, double> Interpolate(DateTime relative_to)
         {
-            double relativeLongitude, relativeLatitude;
-            int totalTime = 0;
+            Segment current = null, last = null;
             int relativeDifferenceInSecs = (int)Math.Abs(relative_to.Subtract(InitialLocation.DateTime).TotalSeconds);
             int timePassedInFlight = 0;
-            for (int i = 0; i < Segments.Count; i++)
+            foreach (Segment segment in Segments)
             {
-                timePassedInFlight += Segments[i].TimeSpan;
+                current = segment;
+                timePassedInFlight += segment.TimeSpan;
                 if (timePassedInFlight >= relativeDifferenceInSecs)
-                {
-
-                }
+                    break;
+                last = segment;
             }
-            return new Tuple<double, double>(1.0, 2.0);
+            return GetCurrentCoordinates(current, last, timePassedInFlight - relativeDifferenceInSecs);
+        }
+
+        private Tuple<double, double> GetCurrentCoordinates(Segment current, Segment last, int secsInSegment)
+        {
+            double currentLongitude, currentLatitude, longitudeDifference, latitudeDifference;
+            // length of line completed over total length is equal to span of time completed over total span of time
+            double lengthCompleted = (secsInSegment / current.TimeSpan);
+            // means its the first segment
+            if (last == null)
+            {
+                longitudeDifference = current.Longitude - InitialLocation.Longitude;
+                latitudeDifference = current.Latitude - InitialLocation.Latitude;
+            } else
+            {
+                longitudeDifference = current.Longitude - last.Longitude;
+                latitudeDifference = current.Latitude - last.Latitude;
+            }
+            // totalSegLen = Math.Sqrt(Math.Pow(longitudeDifference, 2) + Math.Pow(latitudeDifference, 2));
+            // lengthCompleted = totalSegLen * (secsInSegment / current.TimeSpan);
+            // Current_X / X_Difference = Length_Completed / Total_Length
+            currentLongitude = longitudeDifference * lengthCompleted;
+            // Current_Y / Y_Difference = Length_Completed / Total_Length
+            currentLatitude = latitudeDifference * lengthCompleted;
+            return new Tuple<double, double>(currentLongitude, currentLatitude);
         }
 
         public string HashId()
         {
             // get hash code of initial location and date and convert it to hexaecimal representation
-            int locationHash = (InitialLocation.Longitude + InitialLocation.Latitude).GetHashCode();
-            int dateHash = InitialLocation.DateTime.GetHashCode();
+            int locationHash = (this.InitialLocation.Longitude + this.InitialLocation.Latitude).GetHashCode();
+            int dateHash = this.InitialLocation.DateTime.GetHashCode();
             int hash = dateHash + locationHash;
             // get uppercase hexadecimal representation
             string idCode = hash.ToString("X");
             // get all capital letters from company name
-            string idLetters = string.Concat(CompanyName.Where(capital => capital >= 'A' && capital <= 'Z'));
+            string idLetters = string.Concat(this.CompanyName.Where(capital => capital >= 'A' && capital <= 'Z'));
             string flightId = idLetters + idCode;
 
             // if id is longer than 10 characters

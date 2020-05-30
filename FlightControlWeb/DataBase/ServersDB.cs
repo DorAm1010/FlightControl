@@ -15,9 +15,7 @@ namespace FlightControlWeb.DataBase
 
         public void DeleteById(string id)
         {
-            var toRemove = GetById(id);
-            if (toRemove != null)
-                servers.Remove(toRemove);
+            servers.Remove(id);
         }
 
         public IEnumerable<Server> GetAllValues()
@@ -34,7 +32,9 @@ namespace FlightControlWeb.DataBase
 
         public Server GetById(string id)
         {
-            return (Server)servers[id];
+            if(servers.ContainsKey(id))
+                return (Server)servers[id];
+            return null;
         }
     }
 }
