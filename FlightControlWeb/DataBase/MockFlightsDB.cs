@@ -15,7 +15,7 @@ namespace FlightControlWeb.DataBase
                     {
                         Id = "DA1010",
                         CompanyName = "DorAmraniAir",
-                        DateTime = DateTime.Parse("1994-10-10T10:10:10Z"),
+                        DateTime = DateTime.Parse("1994-10-10T10:10:10Z").ToUniversalTime(),
                         IsExternal = false,
                         Latitude = 32.345,
                         Longitude = 34.654,
@@ -26,7 +26,7 @@ namespace FlightControlWeb.DataBase
                     {
                         Id = "YM1111",
                         CompanyName = "YakirMosheCorp",
-                        DateTime = DateTime.Parse("1994-06-08T12:34:56Z"),
+                        DateTime = DateTime.Parse("1994-06-08T12:34:56Z").ToUniversalTime(),
                         IsExternal = false,
                         Latitude = 29.4564573,
                         Longitude = 36.63568658,
@@ -37,7 +37,7 @@ namespace FlightControlWeb.DataBase
                     {
                         Id = "SA1212",
                         CompanyName = "FlatEarthSociety",
-                        DateTime = DateTime.Parse("0001-04-20T23:12:33Z"),
+                        DateTime = DateTime.Parse("0001-04-20T23:12:33Z").ToUniversalTime(),
                         IsExternal = false,
                         Latitude = 2.333345,
                         Longitude = 38.9,
@@ -48,7 +48,7 @@ namespace FlightControlWeb.DataBase
                     {
                         Id = "EL0909",
                         CompanyName = "YallaMaccabi",
-                        DateTime = DateTime.Parse("1906-08-08T12:10:09Z"),
+                        DateTime = DateTime.Parse("1906-08-08T12:10:09Z").ToUniversalTime(),
                         IsExternal = false,
                         Latitude = 69.420,
                         Longitude = 7.77,
@@ -64,7 +64,7 @@ namespace FlightControlWeb.DataBase
             {
                 Id = "DA1010",
                 CompanyName = "DorAmraniAir",
-                DateTime = DateTime.Parse("1994-10-10T10:10:10Z"),
+                DateTime = DateTime.Parse("1994-10-10T10:10:10Z").ToUniversalTime(),
                 IsExternal = false,
                 Latitude = 32.345,
                 Longitude = 34.654,
@@ -74,7 +74,7 @@ namespace FlightControlWeb.DataBase
             {
                 Id = "YM1111",
                 CompanyName = "YakirMosheCorp",
-                DateTime = DateTime.Parse("1994-06-08T12:34:56Z"),
+                DateTime = DateTime.Parse("1994-06-08T12:34:56Z").ToUniversalTime(),
                 IsExternal = false,
                 Latitude = 29.4564573,
                 Longitude = 36.63568658,
@@ -84,7 +84,7 @@ namespace FlightControlWeb.DataBase
             {
                 Id = "SA1212",
                 CompanyName = "FlatEarthSociety",
-                DateTime = DateTime.Parse("1234-04-20T23:12:33Z"),
+                DateTime = DateTime.Parse("1234-04-20T23:12:33Z").ToUniversalTime(),
                 IsExternal = false,
                 Latitude = 2.333345,
                 Longitude = 38.9,
@@ -94,7 +94,7 @@ namespace FlightControlWeb.DataBase
             {
                 Id = "EL0909",
                 CompanyName = "YallaMaccabi",
-                DateTime = DateTime.Parse("1906-08-08T12:10:45Z"),
+                DateTime = DateTime.Parse("1906-08-08T12:10:45Z").ToUniversalTime(),
                 IsExternal = false,
                 Latitude = 69.420,
                 Longitude = 7.77,

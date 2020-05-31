@@ -3,6 +3,8 @@ using FlightControlWeb.Model;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace FlightControlWeb.Controllers
@@ -24,7 +26,21 @@ namespace FlightControlWeb.Controllers
             return _dataBase.GetById(id);
         }
 
-        // api/FlightPlan?id=<ID>&locations
+        // GET: api/FlightPlan/id/locations
+        [HttpGet("locations/{id:string}")]
+        public List<double> GetSourceAndDestination(string id)
+        {
+            List<double> locations = new List<double>();
+            FlightPlan plan = _dataBase.GetById(id);
+            int lastSegment = plan.Segments.Count() - 1;
+
+            locations.Add(plan.InitialLocation.Longitude);
+            locations.Add(plan.InitialLocation.Latitude);
+            locations.Add(plan.Segments[lastSegment].Longitude);
+            locations.Add(plan.Segments[lastSegment].Latitude);
+
+            return locations;
+        }
 
         // POST: api/FlightPlan
         [HttpPost]

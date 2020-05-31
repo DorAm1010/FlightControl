@@ -16,7 +16,7 @@ namespace FlightControlWeb.Controllers
         private IDataBase<string, FlightPlan> _flightPlansDataBase;
         private IDataBase<string, Server> _serversDataBase;
 
-        //private MockFlightsDB mock = new MockFlightsDB();
+        private MockFlightsDB mock = new MockFlightsDB();
         public FlightsController(IDataBase<string, FlightPlan> flightPlansDataBase, IDataBase<string, Server> serversDataBase)
         {
             _flightPlansDataBase = flightPlansDataBase;
@@ -26,9 +26,9 @@ namespace FlightControlWeb.Controllers
         // GET: api/Flights?relative_to=<DATE_TIME>
         // get internal or internal and external flights active relative to time of request
         [HttpGet]
-        public IEnumerable<Flight> Get([FromQuery] DateTime relative_to)
+        public /*async*/ IEnumerable<Flight> Get([FromQuery] DateTime relative_to)
         {
-            bool isExternal = Request.QueryString.Value.Contains("sync_all");
+            /*bool isExternal = Request.QueryString.Value.Contains("sync_all");
             DateTime universal = relative_to.ToUniversalTime();
             List<Flight> flights = new List<Flight>();
             List<string> flightsIDs = (List<string>)_flightPlansDataBase.GetAllKeys();
@@ -44,9 +44,9 @@ namespace FlightControlWeb.Controllers
                 }
             }
             if (isExternal)
-                flights.AddRange(GetExternalFlights(universal).Result);
-            //return mock.GetFlights();
-            return flights;
+                flights.AddRange(await GetExternalFlights(universal).Result);*/
+            return mock.GetFlights();
+            //return flights;
         }
 
         private async Task<List<Flight>> GetExternalFlights(DateTime relative_to)
@@ -55,7 +55,7 @@ namespace FlightControlWeb.Controllers
             List<Flight> flights = new List<Flight>();
             foreach(Server server in _serversDataBase.GetAllValues())
             {
-                HttpResponseMessage response = await client.GetAsync(server.Url + "/" + relative_to.ToString());
+                HttpResponseMessage response = await client.GetAsync(server.Url + "/api/Flights?relative_to=" + relative_to.ToString());
                 if (response.IsSuccessStatusCode)
                 {
                     string flightsString = await response.Content.ReadAsStringAsync();
