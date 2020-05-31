@@ -16,7 +16,7 @@ function initMap() {
 function addAirplaneIcon(data) {
     let airplaneIcon = {
         url: "../resources/airplane.png",
-        iconSize : new google.maps.Size(10, 10),
+        iconSize : new google.maps.Size(5, 5),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(0, 0)
     };

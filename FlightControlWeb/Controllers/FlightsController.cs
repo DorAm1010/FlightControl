@@ -6,17 +6,18 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace FlightControlWeb.Controllers
 {
     [ApiController]
-    [Route("api/Flights")]
+    [Route("api/[controller]")]
     public class FlightsController : ControllerBase
     {
         private IDataBase<string, FlightPlan> _flightPlansDataBase;
         private IDataBase<string, Server> _serversDataBase;
 
-        //private MockFlightsDB mock = new MockFlightsDB();
+        private MockFlightsDB mock = new MockFlightsDB();
         public FlightsController(IDataBase<string, FlightPlan> flightPlansDataBase, IDataBase<string, Server> serversDataBase)
         {
             _flightPlansDataBase = flightPlansDataBase;
@@ -28,7 +29,7 @@ namespace FlightControlWeb.Controllers
         [HttpGet]
         public IEnumerable<Flight> Get([FromQuery] DateTime relative_to)
         {
-            bool isExternal = Request.QueryString.Value.Contains("sync_all");
+/*            bool isExternal = Request.QueryString.Value.Contains("sync_all");
             DateTime universal = relative_to.ToUniversalTime();
             List<Flight> flights = new List<Flight>();
             List<string> flightsIDs = (List<string>)_flightPlansDataBase.GetAllKeys();
@@ -44,8 +45,8 @@ namespace FlightControlWeb.Controllers
                 }
             }
             if (isExternal)
-                flights.AddRange(GetExternalFlights(universal).Result);
-            //return mock.GetFlights();
+                flights.AddRange(GetExternalFlights(universal).Result);*/
+           List<Flight> flights = mock.GetFlights().ToList<Flight>();
             return flights;
         }
 

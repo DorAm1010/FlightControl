@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace FlightControlWeb.Controllers
 {
-    [Route("api/FlightPlan")]
+    [Route("api/[controller]")]
     [ApiController]
     public class FlightPlanController : ControllerBase
     {
