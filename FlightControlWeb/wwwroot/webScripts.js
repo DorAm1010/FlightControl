@@ -46,8 +46,7 @@ let flightPlan1 =
             "longitude": 33.234,
             "latitude": 31.18,
             "timespan_seconds": 650
-        },
-        /*... more segments...*/
+        }
     ]
 };
 
@@ -65,8 +64,7 @@ let flightPlan2 =
             "longitude": 33.234,
             "latitude": 31.18,
             "timespan_seconds": 650
-        },
-        /*... more segments...*/
+        }
     ]
 };
 
@@ -144,6 +142,7 @@ function sortFlights(flight) {
     }
 }
 
+//GET
 // receive all flights from server
 function initFlights(event) {
     let flighturl = "../api/Flights?relative_to=2020-05-26T12:00:00Z&sync_all";
@@ -153,13 +152,77 @@ function initFlights(event) {
             flights.forEach(function (flight) {
                 sortFlights(flight);
                 addAirplaneIcon({
-                    coords: { lat: flight.latitude, lng: flight.longitude },
+                    coords: { lng: flight.longitude , lat: flight.latitude },
                     payload: flight
                 });
             });
         })
         .fail(function (reason) {
             console.log("Failed loading flights");
+        });
+}
+
+//POST
+function sendFlightPlan(events) {
+    let flightPlanzzz = flightPlan1;
+    let postUrl = "../api/FlightPlan";
+    fetch(postUrl, {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(flightPlanzzz),
+    })
+    .then(response => response.json())
+        .then(flightPlanzzz => {
+            console.log('Success:', flightPlanzzz);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
+//LOCATIONS
+function getLocation(event) {
+    let localID = "SA856B9CBD";
+    let flighturl = `../api/FlightPlan/locations/${localID}`;
+    //let flighturl = "../api/Flights";
+    $.getJSON(flighturl)
+        .done(function (locations) {
+            let sourceP = { lng: parseFloat(locations[0]), lat: parseFloat(locations[1]) };
+            let destP = { lng: parseFloat(locations[2]), lat: parseFloat(locations[3]) };
+            console.log(sourceP.lng + " " + sourceP.lat + " " + destP.lng + " " + destP.lat);
+        })
+        .fail(function (reason) {
+            console.log("Failed to get flight's locations");
+        });
+}
+
+//DELETE
+function deleteFlight(event) {
+   // let localIDs = "SA856B9CBD";
+    //let locFlight = flight1
+    //window.alert(event.target.id);
+    let toDel = confirm(`Do you want to delete flight "${event.target.id}" ?`);
+    if (toDel != true) {
+        return;
+    }
+    // let notif = new Notification("flight will be deleted");
+    let deleteUrl = `../api/Flights/${event.target.id}`;
+    let localididid = event.target.id;
+    fetch(deleteUrl, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(event.target.id),
+    })
+        .then(response => response.json())
+        .then(localididid => {
+            console.log('Success:', localididid);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
         });
 }
 
@@ -206,15 +269,6 @@ function highlightCancel(event) {
     clicked = false;
 }
 
-
-function deleteFlight(event) {
-    //window.alert(event.target.id);
-    let toDel = confirm(`Do you want to delete flight "${event.target.id}" ?`);
-    if (toDel != true) {
-        return;
-    }
-    let notif = new Notification("flight will be deleted");
-}
 
 function showFlightDetails(event) {
     let flightDetails = document.getElementById("flightDetails");
