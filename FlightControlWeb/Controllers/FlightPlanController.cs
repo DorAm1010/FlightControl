@@ -27,7 +27,7 @@ namespace FlightControlWeb.Controllers
         }
 
         // GET: api/FlightPlan/id/locations
-        [HttpGet("locations/{id:string}")]
+        [HttpGet("locations/{id}", Name = "GetSourceAndDestination")]
         public List<double> GetSourceAndDestination(string id)
         {
             List<double> locations = new List<double>();
@@ -52,7 +52,7 @@ namespace FlightControlWeb.Controllers
             _dataBase.Add(flightPlan);
             if (_dataBase.GetById(flightPlan.HashId()) == null)
                 return BadRequest(value);
-            
+            Console.WriteLine(value.ToString());
             return Ok(value);
         }
     }
