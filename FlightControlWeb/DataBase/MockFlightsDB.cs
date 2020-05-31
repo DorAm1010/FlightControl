@@ -13,7 +13,7 @@ namespace FlightControlWeb.DataBase
                 case 205927916:
                     return new Flight
                     {
-                        Id = "DA1010",
+                        FlightId = "DA1010",
                         CompanyName = "DorAmraniAir",
                         DateTime = DateTime.Parse("1994-10-10T10:10:10Z").ToUniversalTime(),
                         IsExternal = false,
@@ -24,7 +24,7 @@ namespace FlightControlWeb.DataBase
                 case 123456789:
                     return new Flight
                     {
-                        Id = "YM1111",
+                        FlightId = "YM1111",
                         CompanyName = "YakirMosheCorp",
                         DateTime = DateTime.Parse("1994-06-08T12:34:56Z").ToUniversalTime(),
                         IsExternal = false,
@@ -35,7 +35,7 @@ namespace FlightControlWeb.DataBase
                 case 987654321:
                     return new Flight
                     {
-                        Id = "SA1212",
+                        FlightId = "SA1212",
                         CompanyName = "FlatEarthSociety",
                         DateTime = DateTime.Parse("0001-04-20T23:12:33Z").ToUniversalTime(),
                         IsExternal = false,
@@ -46,7 +46,7 @@ namespace FlightControlWeb.DataBase
                 default:
                     return new Flight
                     {
-                        Id = "EL0909",
+                        FlightId = "EL0909",
                         CompanyName = "YallaMaccabi",
                         DateTime = DateTime.Parse("1906-08-08T12:10:09Z").ToUniversalTime(),
                         IsExternal = false,
@@ -62,7 +62,7 @@ namespace FlightControlWeb.DataBase
             var flights = new List<Flight> {
             new Flight
             {
-                Id = "DA1010",
+                FlightId = "DA1010",
                 CompanyName = "DorAmraniAir",
                 DateTime = DateTime.Parse("1994-10-10T10:10:10Z").ToUniversalTime(),
                 IsExternal = false,
@@ -72,7 +72,7 @@ namespace FlightControlWeb.DataBase
             },
             new Flight
             {
-                Id = "YM1111",
+                FlightId = "YM1111",
                 CompanyName = "YakirMosheCorp",
                 DateTime = DateTime.Parse("1994-06-08T12:34:56Z").ToUniversalTime(),
                 IsExternal = false,
@@ -82,7 +82,7 @@ namespace FlightControlWeb.DataBase
             },
             new Flight
             {
-                Id = "SA1212",
+                FlightId = "SA1212",
                 CompanyName = "FlatEarthSociety",
                 DateTime = DateTime.Parse("1234-04-20T23:12:33Z").ToUniversalTime(),
                 IsExternal = false,
@@ -92,7 +92,7 @@ namespace FlightControlWeb.DataBase
             },
             new Flight
             {
-                Id = "EL0909",
+                FlightId = "EL0909",
                 CompanyName = "YallaMaccabi",
                 DateTime = DateTime.Parse("1906-08-08T12:10:45Z").ToUniversalTime(),
                 IsExternal = false,

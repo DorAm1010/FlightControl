@@ -47,7 +47,7 @@ let flightPlan1 =
             "latitude": 31.18,
             "timespan_seconds": 650
         },
-        /... more segments.../
+        /*... more segments...*/
     ]
 };
 
@@ -55,7 +55,7 @@ let flightPlan2 =
 {
     "passengers": 320,
     "company_name": "Dor",
-    "initial_location": {
+    "initial_location": { 
         "longitude": 31.720005,
         "latitude": 35.987877,
         "date_time": "2020-12-26T23:56:21Z"
@@ -66,7 +66,7 @@ let flightPlan2 =
             "latitude": 31.18,
             "timespan_seconds": 650
         },
-        /... more segments.../
+        /*... more segments...*/
     ]
 };
 
@@ -78,73 +78,66 @@ let localFlightPlans = [flightPlan1, flightPlan2];
 //let myFlightsT = document.getElementById("myFlightsT");
 let numberOfFlights;
 function addMyFlightsT(flight) {
-    let myFlightsT = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
-    //localFlightsManager.forEach(function (flight) {
-    let row = myFlightsT.insertRow();
-    let idCell = row.insertCell();
-    let companyCell = row.insertCell();
-    let tdText;
-    let delB = "<button id=${flight.flight_id} value=X></button>";
-    //let delB = document.createElement("button");
-    //delB.id = flight.flight_id;
-    //delB.value = "X";
-    //delB.setAttribute("class", "btn btn-danger");
-    //delB.setAttribute("onclick", "deleteFlight(event)");
-    row.setAttribute("onclick", "showFlightDetails(event)");
-    row.setAttribute("data-toggle", "popover");
-    idCell.id = flight.flight_id;
-    companyCell.id = flight.flight_id;
-    tdText = document.createTextNode(flight.flight_id);
-    idCell.appendChild(tdText);
-    tdText = document.createTextNode(flight.company_name);
-    companyCell.appendChild(tdText);
-    //row.appendChild(delB);
-    updatePopovers(delB);
-    // });
+  let myFlightsT = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
+  //localFlightsManager.forEach(function (flight) {
+  let row = myFlightsT.insertRow();
+  let idCell = row.insertCell();
+  let companyCell = row.insertCell();
+  let tdText;
+  row.setAttribute("onclick", "showFlightDetails(event)");
+  row.setAttribute("data-toggle", "popover");
+  idCell.id = flight.flightId;
+  companyCell.id = flight.flightId;
+  tdText = document.createTextNode(flight.flightId);
+  idCell.appendChild(tdText);
+  tdText = document.createTextNode(flight.companyName);
+  companyCell.appendChild(tdText);
+  //row.appendChild(delB);
+  updatePopovers(flight.flightId);
+  //  });
 }
 
-function updatePopovers(delB) {
-    window.alert(delB.id);
-    $(function () {
-        $('[data-toggle="popover"]').popover({
-            animation: true,
-            placement: "auto",
-            trigger: "hover focus",
-            content: delB,
-            html: true,
-            delay: { "show": 400, "hide": 1000 }
-        })
+function updatePopovers(flightID) {
+    window.alert(flightID);
+    $('[data-toggle="popover"]').popover({
+        animation: true,
+        placement: "auto",
+        trigger: "hover focus",
+        id: flightID,
+        html: true,
+        delay: { "show": 200, "hide": 1500 },
+        content: function () {
+            let delB = document.createElement("button");
+            delB.value = "X";
+            delB.id = flightID;
+            delB.className = "btn btn-danger";
+            delB.setAttribute("onclick", "deleteFlight(event)");
+            return delB;
+        }
     });
 }
 
 function addExternalFlightsT(flight) {
     let externFlightsT = document.getElementById("externFlightsT");
     let row = externFlightsT.insertRow();
-    //let deletePop;
     let idCell = row.insertCell();
     let companyCell = row.insertCell();
     let tdText;
     row.setAttribute("onclick", "showFlightDetails(event)");
-    row.setAttribute("data-toggle", "tooltip");
-    row.setAttribute("data-placement", "uptop");
     idCell.setAttribute("id", "flight.flight_id");
-    // idCell.setAttribute("onmouseover", "raisePopup(event)");
     companyCell.setAttribute("id", "flight.flight_id")
-    // companyCell.setAttribute("onmouseover", "raisePopup(event)")
     tdText = document.createTextNode(flight.flight_id);
     idCell.appendChild(tdText);
     tdText = document.createTextNode(flight.company_name);
     companyCell.appendChild(tdText);
-    //deletePop.setAttribute("style", "display: none");
-    //row.appendChild()
 }
 
 
 // sort flights to relevant table
 function sortFlights(flight) {
-    if (flight.is_external === true) {
+    if (flight.isExternal === true) {
         addExternalFlightsT(flight)
-    } else if (flight.is_external === false) {
+    } else if (flight.isExternal === false) {
         addMyFlightsT(flight);
     } else {
         //raiseNotification
@@ -153,7 +146,7 @@ function sortFlights(flight) {
 
 // receive all flights from server
 function initFlights(event) {
-    let flighturl = "../api/Flights?relative_to==2020-05-06T12:00:00Z&sync_all";
+    let flighturl = "../api/Flights?relative_to=2020-05-26T12:00:00Z&sync_all";
     //let flighturl = "../api/Flights";
     $.getJSON(flighturl)
         .done(function (flights) {
@@ -215,7 +208,12 @@ function highlightCancel(event) {
 
 
 function deleteFlight(event) {
-    window.alert(event.target.id);
+    //window.alert(event.target.id);
+    let toDel = confirm(`Do you want to delete flight "${event.target.id}" ?`);
+    if (toDel != true) {
+        return;
+    }
+    let notif = new Notification("flight will be deleted");
 }
 
 function showFlightDetails(event) {
@@ -232,9 +230,9 @@ function showFlightDetails(event) {
         let tdText;
         tdText = document.createTextNode(flightPlan.company_name);
         companyCell.appendChild(tdText);
-        //   window.alert(flightPlan.initial_location.latitude + " " + flightPlan.initial_location.longitude);
+     //   window.alert(flightPlan.initial_location.latitude + " " + flightPlan.initial_location.longitude);
         tdText = coordsToLocation(flightPlan.initial_location.latitude, flightPlan.initial_location.longitude);
-        //   window.alert("location is " + tdText);
+     //   window.alert("location is " + tdText);
         sourceCell.appendChild(tdText);
         tdText = document.createTextNode(flightPlan.passengers);
         passengersCell.appendChild(tdText);
@@ -275,3 +273,9 @@ async function updateFlights() {
 
     }
 }
+
+
+
+
+
+
