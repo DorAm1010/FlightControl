@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace FlightControlWeb.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/FlightPlan")]
     [ApiController]
     public class FlightPlanController : ControllerBase
     {
@@ -27,7 +27,7 @@ namespace FlightControlWeb.Controllers
         }
 
         // GET: api/FlightPlan/id/locations
-        [HttpGet("locations/{id:string}")]
+        [HttpGet("locations/{id}")]
         public List<double> GetSourceAndDestination(string id)
         {
             List<double> locations = new List<double>();
