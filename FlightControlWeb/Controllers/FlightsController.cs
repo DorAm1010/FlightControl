@@ -13,10 +13,11 @@ namespace FlightControlWeb.Controllers
     [Route("api/Flights")]
     public class FlightsController : ControllerBase
     {
+        
         private IDataBase<string, FlightPlan> _flightPlansDataBase;
         private IDataBase<string, Server> _serversDataBase;
 
-        //private MockFlightsDB mock = new MockFlightsDB();
+        private MockFlightsDB mock = new MockFlightsDB();
         public FlightsController(IDataBase<string, FlightPlan> flightPlansDataBase, IDataBase<string, Server> serversDataBase)
         {
             _flightPlansDataBase = flightPlansDataBase;
@@ -26,9 +27,9 @@ namespace FlightControlWeb.Controllers
         // GET: api/Flights?relative_to=<DATE_TIME>
         // get internal or internal and external flights active relative to time of request
         [HttpGet]
-        public async Task<IEnumerable<Flight>> Get([FromQuery] DateTime relative_to)
+        public /*async*/ /*Task<*/IEnumerable<Flight>/*>*/ Get([FromQuery] DateTime relative_to)
         {
-            bool isExternal = Request.QueryString.Value.Contains("sync_all");
+         /*   bool isExternal = Request.QueryString.Value.Contains("sync_all");
             DateTime universal = relative_to.ToUniversalTime();
             List<Flight> flights = new List<Flight>();
             List<string> flightsIDs = (List<string>)_flightPlansDataBase.GetAllKeys();
@@ -44,9 +45,9 @@ namespace FlightControlWeb.Controllers
                 }
             }
             if (isExternal)
-                flights.AddRange(await GetExternalFlights(universal));
-            //return mock.GetFlights();
-            return flights;
+                flights.AddRange(await GetExternalFlights(universal)); */
+            return mock.GetFlights();
+            //return flights;
         }
 
         private async Task<List<Flight>> GetExternalFlights(DateTime relative_to)

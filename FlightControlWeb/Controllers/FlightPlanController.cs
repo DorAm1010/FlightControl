@@ -12,6 +12,7 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class FlightPlanController : ControllerBase
     {
+        MockFlightPlanDB mdb = new MockFlightPlanDB();
         private IDataBase<string, FlightPlan> _dataBase;
         public FlightPlanController(IDataBase<string, FlightPlan> dataBase)
         {
@@ -22,7 +23,8 @@ namespace FlightControlWeb.Controllers
         [HttpGet("{id}", Name = "Get")]
         public FlightPlan Get(string id)
         {
-            return _dataBase.GetById(id);
+            return mdb.Get(id);
+            //return _dataBase.GetById(id);
         }
 
         // GET: api/FlightPlan/id/locations

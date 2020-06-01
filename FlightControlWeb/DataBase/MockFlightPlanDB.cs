@@ -99,7 +99,7 @@ namespace FlightControlWeb.DataBase
         {
             foreach (FlightPlan plan in flightPlans)
             {
-                if (plan.HashId() == id)
+                if (String.Compare(plan.HashId(), id) == 0)
                     return plan;
             }
             return null;

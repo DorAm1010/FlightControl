@@ -34,8 +34,9 @@
     <title></title>
 </head>
 <body>
-    <div class="row justify-content-md-center">
-        <div class="alert alert-info" id="notificationWindow">
+    <div class="d-flex justify-content-sm-center">
+        <div class="alert alert-danger alert-dismissible fade show" id="notificationWindow">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong id="notification"></strong>
         </div>
     </div>
@@ -48,8 +49,6 @@
             </div>
             <!-- For 'My Flights' -->
             <div class="col-md-3">
-                <button onclick="initFlights(event)">init!</button>
-                <button onclick="sendFlightPlan(event)">send flightP</button>
                 <button onclick="getLocation(event)">get flight Loc</button>
                 <h1 style="font-size:20px">My Flights</h1>
                 <table class="table table-sm table-hover" id="myFlightsT" ondrop="internDrop(event);" ondragover="dragOverHandler(event);">

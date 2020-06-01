@@ -74,12 +74,13 @@ let currentMarkedFlight;
 window.onload = function load() {
     //$('#dragAndDrop').hide();
     //running = true;
+    //sleep(200);
     this.raiseNotification(`Welcome to Flight Control!
     1. You can add Flight Plans by dropping the files at the tables.
     2. You can receive each flight's details by clicking on the desired entry in the list.
     3. You can remove an internal flight by clicking the red button in the raised popup of each entry.`);
     this.initFlights();
-    sleep(100);
+   // sleep(100);
     //this.deleteEndedFlight();
     //this.asyncUpdates();
 };
@@ -192,9 +193,10 @@ function getFlightPlan(event) {
     let getFPUrl = `../api/FlightPlan/${event.target.id}`;
     $.getJSON(getFPUrl)
         .done(function (flightPlan) {
-            //window.alert(flightPlan.companyName);
+            window.alert(flightPlan.companyName);
             highlightEntry(event.target.id);
             highlightFlight(event.target.id);
+            showFlightDetails(flightPlan);
         })
         .fail(function (reason) {
             console.log("Failed to get flight's info");
@@ -276,7 +278,7 @@ function showFlightDetails(flightPlan) {
     let passengersCell = row.insertCell();
     companyCell.innerText = flightPlan.companyName;
     //tdText = coordsToLocation(flightPlan.initial_location.latitude, flightPlan.initial_location.longitude);
-    sourceCell.appendChild(tdText);
+    //sourceCell.appendChild(tdText);
     //tdText = document.createTextNode(flightPlan.passengers);
     passengersCell.innerText = flightPlan.passengers;
 }
@@ -314,8 +316,8 @@ function internDrop(ev) {
 function raiseNotification(notif) {
     $('notificationWindow').show();
     document.getElementById('notification').innerHTML = notif;
-    $('notificationWindow').fadeTo(5000, 400).slideUp(400, function () {
-        $('notificationWindow').slideUp(400);
+    $('notificationWindow').fadeTo(1000, 200).slideUp(200, function () {
+        $('notificationWindow').slideUp(200);
     });
 }
 
