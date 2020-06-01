@@ -7,14 +7,14 @@ namespace FlightControlWeb.DataBase
 {
     public class MockFlightPlanDB
     {
-        List<FlightPlan> flightPlans = new List<FlightPlan> {
+        public List<FlightPlan> flightPlans = new List<FlightPlan> {
             new FlightPlan {
                 Passengers = 1,
                 CompanyName = "AirAmrani",
                 InitialLocation = new InitialLocation {
                     Longitude = 10.10,
                     Latitude = 19.94,
-                    DateTime = DateTime.Parse("2020-01-01T22:00:01Z").ToUniversalTime()
+                    DateTime = DateTime.Parse("2020-06-01T19:50:01Z").ToUniversalTime()
                 },
                 Segments = new List<Segment>{
                     new Segment {
@@ -41,7 +41,7 @@ namespace FlightControlWeb.DataBase
                 InitialLocation = new InitialLocation {
                     Longitude = 16.7,
                     Latitude = 19.93,
-                    DateTime = DateTime.Parse("2020-01-01T21:00:01Z").ToUniversalTime()
+                    DateTime = DateTime.Parse("2020-06-01T19:50:01Z").ToUniversalTime()
                 },
                 Segments = new List<Segment>{
                     new Segment {
@@ -68,7 +68,7 @@ namespace FlightControlWeb.DataBase
                 InitialLocation = new InitialLocation {
                     Longitude = 0.0,
                     Latitude = 0,
-                    DateTime = DateTime.Parse("2020-01-01T21:30:01Z").ToUniversalTime()
+                    DateTime = DateTime.Parse("2020-06-01T19:50:01Z").ToUniversalTime()
                 },
                 Segments = new List<Segment>{
                     new Segment {
