@@ -16,7 +16,7 @@ namespace FlightControlWeb.Controllers
         private IDataBase<string, FlightPlan> _flightPlansDataBase;
         private IDataBase<string, Server> _serversDataBase;
 
-        private MockFlightsDB mock = new MockFlightsDB();
+        //private MockFlightsDB mock = new MockFlightsDB();
         public FlightsController(IDataBase<string, FlightPlan> flightPlansDataBase, IDataBase<string, Server> serversDataBase)
         {
             _flightPlansDataBase = flightPlansDataBase;
@@ -55,7 +55,8 @@ namespace FlightControlWeb.Controllers
             List<Flight> flights = new List<Flight>();
             foreach(Server server in _serversDataBase.GetAllValues())
             {
-                HttpResponseMessage response = await client.GetAsync(server.Url + "/api/Flights?relative_to=" + relative_to.ToString());
+                string uri = server.Url + "/api/Flights?relative_to=" + relative_to.ToString("yyyy-MM-ddTHH:mm:ssZ");
+                HttpResponseMessage response = await client.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
                 {
                     string flightsString = await response.Content.ReadAsStringAsync();
@@ -70,7 +71,7 @@ namespace FlightControlWeb.Controllers
         public IActionResult Delete(string id)
         {
             _flightPlansDataBase.DeleteById(id);
-            return Ok("Flight With ID: " + id + "Has Been Deleted");
+            return Ok("Flight With ID: " + id + " Has Been Deleted");
         }
     }
 }

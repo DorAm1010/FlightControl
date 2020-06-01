@@ -5,11 +5,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace FlightControlWeb.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/FlightPlan")]
     [ApiController]
     public class FlightPlanController : ControllerBase
     {
@@ -52,7 +51,6 @@ namespace FlightControlWeb.Controllers
             _dataBase.Add(flightPlan);
             if (_dataBase.GetById(flightPlan.HashId()) == null)
                 return BadRequest(value);
-            Console.WriteLine(value.ToString());
             return Ok(value);
         }
     }
