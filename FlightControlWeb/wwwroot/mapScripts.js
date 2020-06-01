@@ -3,7 +3,7 @@
 //Map init
 let Gmap;
 let apIcons = {};
-let clicked = false;
+//let clicked = false;
 function initMap() {
     Gmap = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -34.397, lng: 150.644 },
@@ -11,7 +11,7 @@ function initMap() {
     });
     // $("map").append(map)
 }
-//google.maps.event.addDomListener(window, "load", initialize);
+// google.maps.event.addDomListener(window, "load", initialize);
 
 function addAirplaneIcon(data) {
     let airplaneIcon = {
@@ -25,15 +25,32 @@ function addAirplaneIcon(data) {
         map: Gmap,
         icon: airplaneIcon
     });
-    apIcons[data.payload.flight_id] = airplaneMarker;
+    apIcons[data.payload.flightId] = airplaneMarker;
+    console.log(data.payload.flightId);
+    console.log(apIcons[data.payload.flightId]);
     //check info window and add
     if (data.payload) {
         contect: data.payload;
     }
     airplaneMarker.addListener('click', function () {
-        clicked = true;
-        highlightFlight(data.payload);
+        //clicked = true;
+        let id = data.payload.flightId;
+        let target = { id };
+        let flightObj = { target };
+        getFlightPlan(flightObj);
     });
+}
+
+function removeAirplaneIcon(flightId) {
+    // delete from map:
+    console.log(apIcons);
+    apIcons[flightId].setMap(null);
+    delete apIcons[flightId];
+}
+
+// Flight selection
+function highlightFlight(flightId) {
+    apIcons[flightId].setAnimation(google.maps.Animation.BOUNCE); 
 }
 
 function coordsToLocation(lati, long) {

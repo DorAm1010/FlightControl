@@ -67,36 +67,41 @@ let flightPlan2 =
         }
     ]
 };
-
 // JSON ex.
+let progRun;
+let currentMarkedFlight;
+//Initialize app
+window.onload = function load() {
+    //$('#dragAndDrop').hide();
+    //running = true;
+    this.raiseNotification(`Welcome to Flight Control!
+    1. You can add Flight Plans by dropping the files at the tables.
+    2. You can receive each flight's details by clicking on the desired entry in the list.
+    3. You can remove an internal flight by clicking the red button in the raised popup of each entry.`);
+    this.initFlights();
+    sleep(100);
+    //this.deleteEndedFlight();
+    //this.asyncUpdates();
+};
 
-let localFlightsManager = [flight1, flight2];
-let localFlightPlans = [flightPlan1, flightPlan2];
 
-//let myFlightsT = document.getElementById("myFlightsT");
-let numberOfFlights;
 function addMyFlightsT(flight) {
-  let myFlightsT = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
-  //localFlightsManager.forEach(function (flight) {
-  let row = myFlightsT.insertRow();
-  let idCell = row.insertCell();
-  let companyCell = row.insertCell();
-  let tdText;
-  row.setAttribute("onclick", "showFlightDetails(event)");
-  row.setAttribute("data-toggle", "popover");
-  idCell.id = flight.flightId;
-  companyCell.id = flight.flightId;
-  tdText = document.createTextNode(flight.flightId);
-  idCell.appendChild(tdText);
-  tdText = document.createTextNode(flight.companyName);
-  companyCell.appendChild(tdText);
-  //row.appendChild(delB);
-  updatePopovers(flight.flightId);
-  //  });
+    let myFlightsT = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
+    let row = myFlightsT.insertRow();
+    let idCell = row.insertCell();
+    let companyCell = row.insertCell();
+    row.setAttribute("onclick", "getFlightPlan(event)");
+    row.id = flight.flightId;
+    row.setAttribute("data-toggle", "popover");
+    idCell.id = flight.flightId;
+    idCell.innerText = flight.flightId;
+    companyCell.id = flight.flightId;
+    companyCell.innerText = flight.companyName;
+    updatePopovers(flight.flightId);
 }
 
 function updatePopovers(flightID) {
-    window.alert(flightID);
+    //window.alert(flightID);
     $('[data-toggle="popover"]').popover({
         animation: true,
         placement: "auto",
@@ -116,20 +121,17 @@ function updatePopovers(flightID) {
 }
 
 function addExternalFlightsT(flight) {
-    let externFlightsT = document.getElementById("externFlightsT");
+    let externFlightsT = document.getElementById("externFlightsT").getElementsByTagName('tbody')[0];;
     let row = externFlightsT.insertRow();
     let idCell = row.insertCell();
     let companyCell = row.insertCell();
     let tdText;
     row.setAttribute("onclick", "showFlightDetails(event)");
-    idCell.setAttribute("id", "flight.flight_id");
-    companyCell.setAttribute("id", "flight.flight_id")
-    tdText = document.createTextNode(flight.flight_id);
-    idCell.appendChild(tdText);
-    tdText = document.createTextNode(flight.company_name);
-    companyCell.appendChild(tdText);
+    idCell.id = flight.flightId;
+    idCell.innerHTML = flight.flightId;
+    companyCell.id = flight.flightId;
+    companyCell.innerHTML = flight.companyName;
 }
-
 
 // sort flights to relevant table
 function sortFlights(flight) {
@@ -142,11 +144,10 @@ function sortFlights(flight) {
     }
 }
 
-//GET
+//GET (flights)
 // receive all flights from server
-function initFlights(event) {
+function initFlights() {
     let flighturl = "../api/Flights?relative_to=2020-05-26T12:00:00Z&sync_all";
-    //let flighturl = "../api/Flights";
     $.getJSON(flighturl)
         .done(function (flights) {
             flights.forEach(function (flight) {
@@ -182,9 +183,27 @@ function sendFlightPlan(events) {
         });
 }
 
+//GET (flight plan)
+function getFlightPlan(event) {
+    if (currentMarkedFlight != null) {
+        highlightCancel(currentMarkedFlight);
+    }
+    currentMarkedFlight = event.target.id;
+    let getFPUrl = `../api/FlightPlan/${event.target.id}`;
+    $.getJSON(getFPUrl)
+        .done(function (flightPlan) {
+            //window.alert(flightPlan.companyName);
+            highlightEntry(event.target.id);
+            highlightFlight(event.target.id);
+        })
+        .fail(function (reason) {
+            console.log("Failed to get flight's info");
+        });
+}
+
 //LOCATIONS
 function getLocation(event) {
-    let localID = "SA856B9CBD";
+    //let localID = "SA856B9CBD";
     let flighturl = `../api/FlightPlan/locations/${localID}`;
     //let flighturl = "../api/Flights";
     $.getJSON(flighturl)
@@ -200,9 +219,6 @@ function getLocation(event) {
 
 //DELETE
 function deleteFlight(event) {
-   // let localIDs = "SA856B9CBD";
-    //let locFlight = flight1
-    //window.alert(event.target.id);
     let toDel = confirm(`Do you want to delete flight "${event.target.id}" ?`);
     if (toDel != true) {
         return;
@@ -211,86 +227,58 @@ function deleteFlight(event) {
     let deleteUrl = `../api/Flights/${event.target.id}`;
     let localididid = event.target.id;
     fetch(deleteUrl, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(event.target.id),
-    })
-        .then(response => response.json())
-        .then(localididid => {
-            console.log('Success:', localididid);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-}
-
-// Flight selection
-function highlightFlight(flight) {
-
-}
-
-function highlightEntry(flightTable, flight) {
-    let tableId;
-    //let entry;
-    //let rows;
-    //rows = flightTable.getElementById('tr');
-    for (let i = 0, row; row = flightTable.rows[i]; i++) {
-        tableId = row.idCell.id;
-        if (tableId === flight.flight_id) {
-            row.style.backgroundColor = "#808FFF";
-        } else {
-            row.style.backgroundColor = "";
-        }
-    }
-}
-
-function highlightCancel(event) {
-    if (!clicked) {
-        //remove path
-        //
-        // Remove flight details
-        if (flightDetails.rows.length > 1) {
-            flightDetails.deleteRow(1);
-        }
-        // Remove row highlight
-        for (let i = 1, row; row = myFlightsT.rows[i]; i++) {
-            row.style.backgroundColor = "";
-        }
-        for (let i = 1, row; row = externFlightsT.rows[i]; i++) {
-            row.style.backgroundColor = "";
-        }
-        // Remove airplane animation
-        for (let plane in apIcons) {
-            apIcons[plane].setAnimation(null);
-        }
-    }
-    clicked = false;
-}
-
-
-function showFlightDetails(event) {
-    let flightDetails = document.getElementById("flightDetails");
-    localFlightPlans.forEach(function (flightPlan) {
-        let row = flightDetails.insertRow();
-        let idCell = row.insertCell();
-        let companyCell = row.insertCell();
-        let sourceCell = row.insertCell();
-        let destinationCell = row.insertCell();
-        let takeoffCell = row.insertCell();
-        let landingCell = row.insertCell();
-        let passengersCell = row.insertCell();
-        let tdText;
-        tdText = document.createTextNode(flightPlan.company_name);
-        companyCell.appendChild(tdText);
-     //   window.alert(flightPlan.initial_location.latitude + " " + flightPlan.initial_location.longitude);
-        tdText = coordsToLocation(flightPlan.initial_location.latitude, flightPlan.initial_location.longitude);
-     //   window.alert("location is " + tdText);
-        sourceCell.appendChild(tdText);
-        tdText = document.createTextNode(flightPlan.passengers);
-        passengersCell.appendChild(tdText);
+        method: 'DELETE'
+    }).then(() => {
+        console.log(event.target.id + 'removed');
+        removeFlightFromT(event.target.id);
+    }).catch(err => {
+        console.error(err)
     });
+    if (currentMarkedFlight == event.target.id) {
+        currentMarkedFlight = null;
+    }
+}
+
+function removeFlightFromT(flightId) {
+    let rowToRemove = document.getElementById(`${flightId}`);
+    rowToRemove.parentNode.removeChild(rowToRemove);
+    removeAirplaneIcon(flightId);
+}
+
+function highlightEntry(flightId) {
+    let rowToHighlight = document.getElementById(`${flightId}`);
+    rowToHighlight.style.backgroundColor = "#808FFF";
+}
+
+function highlightCancel(flightId) {
+    //let myFlightsT = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
+    // Remove flight details
+    if (flightDetails.rows.length > 1) {
+        flightDetails.deleteRow(1);
+    }
+    // Remove row highlight
+    let canceledRow = document.getElementById(`${flightId}`);
+    canceledRow.style.backgroundColor = "";
+    // Remove airplane animation
+    apIcons[flightId].setAnimation(null);
+}
+
+
+function showFlightDetails(flightPlan) {
+    let flightDetails = document.getElementById("flightDetails");
+    let row = flightDetails.insertRow();
+    let idCell = row.insertCell();
+    let companyCell = row.insertCell();
+    let sourceCell = row.insertCell();
+    let destinationCell = row.insertCell();
+    let takeoffCell = row.insertCell();
+    let landingCell = row.insertCell();
+    let passengersCell = row.insertCell();
+    companyCell.innerText = flightPlan.companyName;
+    //tdText = coordsToLocation(flightPlan.initial_location.latitude, flightPlan.initial_location.longitude);
+    sourceCell.appendChild(tdText);
+    //tdText = document.createTextNode(flightPlan.passengers);
+    passengersCell.innerText = flightPlan.passengers;
 }
 
 
@@ -320,6 +308,15 @@ function internDrop(ev) {
             DataTransferItemList.FlightsArr += ev.dataTransfer.files[i];
         }
     }
+}
+
+//Display notifications
+function raiseNotification(notif) {
+    $('notificationWindow').show();
+    document.getElementById('notification').innerHTML = notif;
+    $('notificationWindow').fadeTo(5000, 400).slideUp(400, function () {
+        $('notificationWindow').slideUp(400);
+    });
 }
 
 async function updateFlights() {
