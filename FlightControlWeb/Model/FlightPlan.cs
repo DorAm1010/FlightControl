@@ -64,38 +64,40 @@ namespace FlightControlWeb.Model
 
         private Tuple<double, double> GetCurrentCoordinates(Segment current, Segment last, int secsInSegment)
         {
-            double currentLongitude, currentLatitude, longitudeDifference, latitudeDifference;
+            double currentLongitude, currentLatitude, longitudeDifference, latitudeDifference, timespan, secs;
+            timespan = (double)current.TimeSpan;
+            secs = (double)secsInSegment;
             // length of line completed over total length is equal to span of time completed over total span of time
-            double lengthCompleted = (secsInSegment / current.TimeSpan);
+            double lengthCompleted =  secs / timespan;
             // means its the first segment
             if (last == null)
             {
-                longitudeDifference = current.Longitude - InitialLocation.Longitude;
-                latitudeDifference = current.Latitude - InitialLocation.Latitude;
+                currentLongitude = InitialLocation.Longitude;
+                currentLatitude = InitialLocation.Latitude;
             } else
             {
-                longitudeDifference = current.Longitude - last.Longitude;
-                latitudeDifference = current.Latitude - last.Latitude;
+                currentLongitude = last.Longitude;
+                currentLatitude = last.Latitude;
             }
-            // totalSegLen = Math.Sqrt(Math.Pow(longitudeDifference, 2) + Math.Pow(latitudeDifference, 2));
-            // lengthCompleted = totalSegLen * (secsInSegment / current.TimeSpan);
+            longitudeDifference = current.Longitude - currentLongitude;
+            latitudeDifference = current.Latitude - currentLatitude;
             // Current_X / X_Difference = Length_Completed / Total_Length
-            currentLongitude = longitudeDifference * lengthCompleted;
+            currentLongitude += longitudeDifference * lengthCompleted;
             // Current_Y / Y_Difference = Length_Completed / Total_Length
-            currentLatitude = latitudeDifference * lengthCompleted;
+            currentLatitude += latitudeDifference * lengthCompleted;
             return new Tuple<double, double>(currentLongitude, currentLatitude);
         }
 
         public string HashId()
         {
             // get hash code of initial location and date and convert it to hexaecimal representation
-            int locationHash = (this.InitialLocation.Longitude + this.InitialLocation.Latitude).GetHashCode();
-            int dateHash = this.InitialLocation.DateTime.GetHashCode();
+            int locationHash = (InitialLocation.Longitude + InitialLocation.Latitude).GetHashCode();
+            int dateHash = InitialLocation.DateTime.GetHashCode();
             int hash = dateHash + locationHash;
             // get uppercase hexadecimal representation
             string idCode = hash.ToString("X");
             // get all capital letters from company name
-            string idLetters = string.Concat(this.CompanyName.Where(capital => capital >= 'A' && capital <= 'Z'));
+            string idLetters = string.Concat(CompanyName.Where(capital => capital >= 'A' && capital <= 'Z'));
             string flightId = idLetters + idCode;
 
             // if id is longer than 10 characters
@@ -105,3 +107,6 @@ namespace FlightControlWeb.Model
         }
     }
 }
+
+// totalSegLen = Math.Sqrt(Math.Pow(longitudeDifference, 2) + Math.Pow(latitudeDifference, 2));
+// lengthCompleted = totalSegLen * (secsInSegment / current.TimeSpan);

@@ -59,7 +59,7 @@ namespace FlightControlWeb.DataBase
 
         public IEnumerable<Flight> GetFlights()
         {
-            var flights = new List<Flight> {
+            List<Flight> flights = new List<Flight> {
             new Flight
             {
                 FlightId = "DA1010",

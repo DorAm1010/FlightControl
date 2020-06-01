@@ -7,7 +7,7 @@ namespace FlightControlWeb.DataBase
 {
     public class FlightPlansDB : IDataBase<string, FlightPlan>
     {
-        // hash table for thread safety
+        // hash table for thread safety + O(1) time complx for get
         private Hashtable hashtable = new Hashtable();
 
         public void Add(FlightPlan toAdd)
@@ -24,7 +24,7 @@ namespace FlightControlWeb.DataBase
         public IEnumerable<FlightPlan> GetAllValues()
         {
             if (hashtable.Values.Count == 0)
-                return null;
+                return new List<FlightPlan>();
             List<FlightPlan> values = hashtable.Values.Cast<FlightPlan>().ToList();
             return values;
         }
@@ -32,7 +32,7 @@ namespace FlightControlWeb.DataBase
         public IEnumerable<string> GetAllKeys()
         {
             if (hashtable.Keys.Count == 0)
-                return null;
+                return new List<string>();
             List<string> values = hashtable.Keys.Cast<string>().ToList();
             return values;
         }
