@@ -29,23 +29,24 @@ namespace FlightControlWeb.Controllers
         [HttpGet]
         public /*async*/ /*Task<*/IEnumerable<Flight>/*>*/ Get([FromQuery] DateTime relative_to)
         {
-         /*   bool isExternal = Request.QueryString.Value.Contains("sync_all");
-            DateTime universal = relative_to.ToUniversalTime();
-            List<Flight> flights = new List<Flight>();
-            List<string> flightsIDs = (List<string>)_flightPlansDataBase.GetAllKeys();
-            foreach (string id in flightsIDs)
-            {
-                FlightPlan plan = _flightPlansDataBase.GetById(id);
-                if (plan.InFlightRelativeTo(universal))
-                {
-                    var tuple = plan.Interpolate(universal);
-                    Flight flight = new Flight(id, tuple.Item1, tuple.Item2,
-                        plan.Passengers, plan.CompanyName, universal, false);
-                    flights.Add(flight);
-                }
-            }
-            if (isExternal)
-                flights.AddRange(await GetExternalFlights(universal)); */
+            /*   bool isExternal = Request.QueryString.Value.Contains("sync_all");
+               DateTime universal = relative_to.ToUniversalTime();
+               List<Flight> flights = new List<Flight>();
+               List<string> flightsIDs = (List<string>)_flightPlansDataBase.GetAllKeys();
+               foreach (string id in flightsIDs)
+               {
+                   FlightPlan plan = _flightPlansDataBase.GetById(id);
+                   if (plan.InFlightRelativeTo(universal))
+                   {
+                       var tuple = plan.Interpolate(universal);
+                       Flight flight = new Flight(id, tuple.Item1, tuple.Item2,
+                           plan.Passengers, plan.CompanyName, universal, false);
+                       flights.Add(flight);
+                   }
+               }
+               if (isExternal)
+                   flights.AddRange(await GetExternalFlights(universal)); */
+            Console.WriteLine("kkkkkkkkkkkkkk");
             return mock.GetFlights();
             //return flights;
         }

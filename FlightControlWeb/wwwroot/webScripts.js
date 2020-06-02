@@ -72,17 +72,20 @@ let progRun;
 let currentMarkedFlight;
 //Initialize app
 window.onload = function load() {
-    //$('#dragAndDrop').hide();
+    $("#dnd").hide();
     //running = true;
     //sleep(200);
+    //progRun = true;
+    document.getElementById('dragpic').style.display = 'none';
     this.raiseNotification(`Welcome to Flight Control!
     1. You can add Flight Plans by dropping the files at the tables.
     2. You can receive each flight's details by clicking on the desired entry in the list.
     3. You can remove an internal flight by clicking the red button in the raised popup of each entry.`);
     this.initFlights();
-   // sleep(100);
+    this.setInterval(function () { updateFlights(); }, 500);
+    //sleep(150);
     //this.deleteEndedFlight();
-    //this.asyncUpdates();
+    //this.updateFlights();
 };
 
 
@@ -102,7 +105,6 @@ function addMyFlightsT(flight) {
 }
 
 function updatePopovers(flightID) {
-    //window.alert(flightID);
     $('[data-toggle="popover"]').popover({
         animation: true,
         placement: "auto",
@@ -126,7 +128,6 @@ function addExternalFlightsT(flight) {
     let row = externFlightsT.insertRow();
     let idCell = row.insertCell();
     let companyCell = row.insertCell();
-    let tdText;
     row.setAttribute("onclick", "showFlightDetails(event)");
     idCell.id = flight.flightId;
     idCell.innerHTML = flight.flightId;
@@ -145,6 +146,14 @@ function sortFlights(flight) {
     }
 }
 
+//Check if flight exists
+function isAlreadyPresent(flightId) {
+    if (document.getElementById("myFlightsT").rows.namedItem(`${flightId}`) != null) {
+        return true;
+    }
+    return false;
+}
+
 //GET (flights)
 // receive all flights from server
 function initFlights() {
@@ -152,11 +161,15 @@ function initFlights() {
     $.getJSON(flighturl)
         .done(function (flights) {
             flights.forEach(function (flight) {
-                sortFlights(flight);
-                addAirplaneIcon({
-                    coords: { lng: flight.longitude , lat: flight.latitude },
-                    payload: flight
-                });
+                if (!isAlreadyPresent(flight.flightId)) {
+                    sortFlights(flight);
+                    addAirplaneIcon({
+                        coords: { lng: flight.longitude, lat: flight.latitude },
+                        payload: flight
+                    });
+                } else {
+                    updateLocation(flight);
+                }
             });
         })
         .fail(function (reason) {
@@ -165,19 +178,19 @@ function initFlights() {
 }
 
 //POST
-function sendFlightPlan(events) {
-    let flightPlanzzz = flightPlan1;
+function sendFlightPlan(flightPlan) {
+    //let flightPlanzzz = flightPlan1;
     let postUrl = "../api/FlightPlan";
     fetch(postUrl, {
         method: 'POST', 
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(flightPlanzzz),
+        body: JSON.stringify(flightPlan),
     })
     .then(response => response.json())
-        .then(flightPlanzzz => {
-            console.log('Success:', flightPlanzzz);
+        .then(flightPlan => {
+            console.log('Success:', flightPlan);
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -193,10 +206,10 @@ function getFlightPlan(event) {
     let getFPUrl = `../api/FlightPlan/${event.target.id}`;
     $.getJSON(getFPUrl)
         .done(function (flightPlan) {
-            window.alert(flightPlan.companyName);
             highlightEntry(event.target.id);
             highlightFlight(event.target.id);
-            showFlightDetails(flightPlan);
+            showFlightDetails(flightPlan, event.target.id);
+            drawRoute(flightPlan);
         })
         .fail(function (reason) {
             console.log("Failed to get flight's info");
@@ -205,9 +218,7 @@ function getFlightPlan(event) {
 
 //LOCATIONS
 function getLocation(event) {
-    //let localID = "SA856B9CBD";
     let flighturl = `../api/FlightPlan/locations/${localID}`;
-    //let flighturl = "../api/Flights";
     $.getJSON(flighturl)
         .done(function (locations) {
             let sourceP = { lng: parseFloat(locations[0]), lat: parseFloat(locations[1]) };
@@ -227,24 +238,72 @@ function deleteFlight(event) {
     }
     // let notif = new Notification("flight will be deleted");
     let deleteUrl = `../api/Flights/${event.target.id}`;
-    let localididid = event.target.id;
+    //let localididid = event.target.id;
     fetch(deleteUrl, {
         method: 'DELETE'
     }).then(() => {
         console.log(event.target.id + 'removed');
         removeFlightFromT(event.target.id);
+        removeAirplaneIcon(event.target.id);
+        if (currentMarkedFlight == event.target.id) {
+            currentMarkedFlight = null;
+        }
     }).catch(err => {
         console.error(err)
     });
-    if (currentMarkedFlight == event.target.id) {
-        currentMarkedFlight = null;
-    }
+}
+
+// Check for flights that are inactive and remove them
+function removeInactiveFlights() {
+    return new Promise(function (resolve, reject) {
+        let flightId;
+        let myFlightsT = document.getElementById("myFlightsT");
+        let rows = myFlightsT.getElementsByTagName('tr');
+        for (let i = 0, row; i < rows.length; i++) {
+            row = rows[i];
+            flightId = row.id;
+            checkStatus(flightId);
+        }
+        setTimeout(() => resolve('Success'), 0);
+    });
+}
+
+//Checking the status of a flight in the server
+function checkStatus(flightId) {
+    let found = false;
+    let currentDate = new Date().toISOString();
+    const checkStatusUrl = `../api/Flights?relative_to=${currentDate}&sync_all`;
+    $.getJSON(checkStatusUrl)
+        .done(function (data) {
+            data.forEach(function (flight) {
+                if (flightId == flight.flightId) {
+                    found = true;
+                }
+            });
+            if (!found) {
+                prepareForDeletion(flightId);
+            }
+        })
+        .fail(function (response) {
+            raiseNotification();
+        });
+}
+
+function prepareForDeletion(flightId) {
+    let id = flightId;
+    let target = { id };
+    let flightObj = { target };
+    deleteFlight(flightObj);
 }
 
 function removeFlightFromT(flightId) {
     let rowToRemove = document.getElementById(`${flightId}`);
+    let flightDetails = document.getElementById("flightDetails");
+    if (currentMarkedFlight == flightId) {
+        flightDetails.deleteRow(1);
+    }
     rowToRemove.parentNode.removeChild(rowToRemove);
-    removeAirplaneIcon(flightId);
+    //removeAirplaneIcon(flightId);
 }
 
 function highlightEntry(flightId) {
@@ -252,8 +311,14 @@ function highlightEntry(flightId) {
     rowToHighlight.style.backgroundColor = "#808FFF";
 }
 
+function mapCancelHighlight(event) {
+    if (currentMarkedFlight != null) {
+        highlightCancel(currentMarkedFlight);
+    }
+}
+
 function highlightCancel(flightId) {
-    //let myFlightsT = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
+    let flightDetails = document.getElementById("flightDetails");
     // Remove flight details
     if (flightDetails.rows.length > 1) {
         flightDetails.deleteRow(1);
@@ -263,10 +328,11 @@ function highlightCancel(flightId) {
     canceledRow.style.backgroundColor = "";
     // Remove airplane animation
     apIcons[flightId].setAnimation(null);
+    removeRoute(flightId);
 }
 
 
-function showFlightDetails(flightPlan) {
+function showFlightDetails(flightPlan, flightId) {
     let flightDetails = document.getElementById("flightDetails");
     let row = flightDetails.insertRow();
     let idCell = row.insertCell();
@@ -276,55 +342,63 @@ function showFlightDetails(flightPlan) {
     let takeoffCell = row.insertCell();
     let landingCell = row.insertCell();
     let passengersCell = row.insertCell();
+    idCell.innerText = flightId;
     companyCell.innerText = flightPlan.companyName;
-    //tdText = coordsToLocation(flightPlan.initial_location.latitude, flightPlan.initial_location.longitude);
-    //sourceCell.appendChild(tdText);
-    //tdText = document.createTextNode(flightPlan.passengers);
+    takeoffCell.innerText = flightPlan.initialLocation.dateTime;
+    landingCell.innerText = "N/A";
     passengersCell.innerText = flightPlan.passengers;
 }
 
 
-function addFlight(flight) {
-
+/*  Drag and Drop functions   */
+function dragOverHandler(event) {
+    document.getElementById('myFlightsT').style.display = 'none';
+    document.getElementById('dragpic').style.display = 'inline';
+    event.preventDefault();
+   // sleep(2000);
 }
 
-function internDrop(ev) {
-    console.log('File(s) dropped');
-
-    // Prevent default behavior (Prevent file from being opened)
-    ev.preventDefault();
-
-    if (ev.dataTransfer.items) {
-        // Use DataTransferItemList interface to access the file(s)
-        for (let i = 0; i < ev.dataTransfer.items.length; i++) {
-            // If dropped items aren't files, reject them
-            if (ev.dataTransfer.items[i].kind === 'JSON') {
-                let file = ev.dataTransfer.items[i].getAsFile();
-                console.log('... file[' + i + '].name = ' + file.name);
-            }
-        }
-    } else {
-        // Use DataTransfer interface to access the file(s)
-        for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-            console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
-            DataTransferItemList.FlightsArr += ev.dataTransfer.files[i];
-        }
+function dropHandler(event) {
+    event.preventDefault();
+    document.getElementById('dragpic').style.display = 'none';
+    document.getElementById('myFlightsT').style.display = 'inline';
+    if (event.dataTransfer.items[0].kind === 'file') {
+        sendFlightPlan(event.dataTransfer.items[0].getAsFile());
     }
 }
+
+
+function dragEndHandler(event) {
+    if (!document.hasFocus) {
+        event.preventDefault();
+        document.getElementById('dragpic').style.display = 'none';
+        document.getElementById('myFlightsT').style.display = 'inline';
+    }
+}
+  
+/* End of Drag and Drop functions   */
 
 //Display notifications
 function raiseNotification(notif) {
-    $('notificationWindow').show();
-    document.getElementById('notification').innerHTML = notif;
-    $('notificationWindow').fadeTo(1000, 200).slideUp(200, function () {
-        $('notificationWindow').slideUp(200);
-    });
+
 }
 
-async function updateFlights() {
-    while (running) {
 
-    }
+
+async function updateFlights() {
+    //while (progRun) {
+        await initFlights();
+       // sleep(50);
+   //   }
+}
+
+// Sleep for 'X' ms
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
 }
 
 
