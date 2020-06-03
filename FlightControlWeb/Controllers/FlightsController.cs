@@ -45,8 +45,13 @@ namespace FlightControlWeb.Controllers
                    }
                }
                if (isExternal)
-                   flights.AddRange(await GetExternalFlights(relative_to)); 
-            //return mock.GetFlights();
+                   flights.AddRange(await GetExternalFlights(relative_to));
+            MockFlightsDB mock = new MockFlightsDB();
+            List<Flight> externalFlights = (List<Flight>)mock.GetFlights();
+            foreach (Flight externalflight in externalFlights)
+                externalflight.IsExternal = true;
+            flights.AddRange(externalFlights);
+
             return flights;
         }
 
@@ -54,7 +59,7 @@ namespace FlightControlWeb.Controllers
         {
             HttpClient client = new HttpClient();
             List<Flight> flights = new List<Flight>();
-            foreach(Server server in _serversDataBase.GetAllValues())
+            foreach (Server server in _serversDataBase.GetAllValues())
             {
                 string uri = server.Url + "/api/Flights?relative_to=" + relative_to.ToString("yyyy-MM-ddTHH:mm:ssZ");
                 HttpResponseMessage response = await client.GetAsync(uri);
@@ -64,6 +69,9 @@ namespace FlightControlWeb.Controllers
                     flights.AddRange(JsonConvert.DeserializeObject<List<Flight>>(flightsString));
                 }
             }
+            foreach (Flight flight in flights)
+                flight.IsExternal = true;
+        
             return flights;
         }
 

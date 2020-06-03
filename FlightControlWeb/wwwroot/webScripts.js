@@ -71,6 +71,9 @@ let flightPlan2 =
 let progRun;
 let numOfFlights = 0;
 let currentMarkedFlight;
+let lngD;
+let latD;
+let landingTime;
 //Initialize app
 window.onload = function load() {
     $("#dnd").hide();
@@ -234,11 +237,9 @@ function getExtra(flightId) {
     let flighturl = `../api/FlightPlan/locations/${flightId}`;
  $.getJSON(flighturl)
      .done(function (info) {
-         let lat = info[0];
-         let lng = info[1];
-         let landingTime = info[2];
-         let extra = { lat, lng, landingTime };
-         return extra;
+         lngD = info[0];
+         latD = info[1];
+         landingTime = info[2];
      })
      .fail(function (reason) {
          raiseNotification("Failed to get flight's destination and landing time");
@@ -312,7 +313,7 @@ function highlightCancel(flightId) {
 
 
 function showFlightDetails(flightPlan, flightId) {
-    //let extra = getExtra(flightId);
+    getExtra(flightId);
     let flightDetails = document.getElementById("flightDetails").getElementsByTagName('tbody')[0];
     if (!(flightDetails.length > 0)) {
         let row = flightDetails.insertRow();
@@ -325,12 +326,22 @@ function showFlightDetails(flightPlan, flightId) {
         let landingCell = row.insertCell();
         let passengersCell = row.insertCell();
         idCell.innerText = flightId;
-        sourceCell.innerText = flightPlan.initialLocation.longitude + ", " + flightPlan.initialLocation.latitude;
-        // destinationCell.innerText = extra[0] + ", " + extra[1];
+        coordsToSource(flightPlan.initialLocation.latitude, flightPlan.initialLocation.longitude);
+        sourceCell.innerText = sourceCountry;
+        //sourceCell.innerText = flightPlan.initialLocation.longitude + ", " + flightPlan.initialLocation.latitude;
         companyCell.innerText = flightPlan.companyName;
         takeoffCell.innerText = flightPlan.initialLocation.dateTime;
-        //  landingCell.innerText = extra[2];
         passengersCell.innerText = flightPlan.passengers;
+        if (landingTime != null && latD != null && lngD != null) {
+        //    destinationCell.innerText = latD + ", " + lngD;
+            coordsToDest(latD, lngD);
+            destinationCell.innerText = destCountry;
+            landingCell.innerText = landingTime;
+        } else {
+            destinationCell.innerText = "N/A";
+            landingCell.innerText = "N/A";
+        }
+
     }
 }
 
