@@ -27,28 +27,27 @@ namespace FlightControlWeb.Controllers
         // GET: api/Flights?relative_to=<DATE_TIME>
         // get internal or internal and external flights active relative to time of request
         [HttpGet]
-        public /*async*/ /*Task<*/IEnumerable<Flight>/*>*/ Get([FromQuery] DateTime relative_to)
+        public async Task<IEnumerable<Flight>> Get([FromQuery] DateTime relative_to)
         {
-            /*   bool isExternal = Request.QueryString.Value.Contains("sync_all");
-               DateTime universal = relative_to.ToUniversalTime();
+               bool isExternal = Request.QueryString.Value.Contains("sync_all");
+               //DateTime universal = relative_to.ToUniversalTime();
                List<Flight> flights = new List<Flight>();
                List<string> flightsIDs = (List<string>)_flightPlansDataBase.GetAllKeys();
                foreach (string id in flightsIDs)
                {
                    FlightPlan plan = _flightPlansDataBase.GetById(id);
-                   if (plan.InFlightRelativeTo(universal))
+                   if (plan.InFlightRelativeTo(relative_to))
                    {
-                       var tuple = plan.Interpolate(universal);
+                       var tuple = plan.Interpolate(relative_to);
                        Flight flight = new Flight(id, tuple.Item1, tuple.Item2,
-                           plan.Passengers, plan.CompanyName, universal, false);
+                           plan.Passengers, plan.CompanyName, relative_to, false);
                        flights.Add(flight);
                    }
                }
                if (isExternal)
-                   flights.AddRange(await GetExternalFlights(universal)); */
-            Console.WriteLine("kkkkkkkkkkkkkk");
-            return mock.GetFlights();
-            //return flights;
+                   flights.AddRange(await GetExternalFlights(relative_to)); 
+            //return mock.GetFlights();
+            return flights;
         }
 
         private async Task<List<Flight>> GetExternalFlights(DateTime relative_to)

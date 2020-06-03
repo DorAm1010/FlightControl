@@ -43,10 +43,13 @@ function addAirplaneIcon(data) {
 }
 
 function removeAirplaneIcon(flightId) {
-    // delete from map:
-    console.log(apIcons);
-    apIcons[flightId].setMap(null);
-    delete apIcons[flightId];
+    //remove all icons
+    Object.keys(apIcons).forEach((index) => {
+        const airplaneMarker = apIcons[index];
+        airplaneMarker.setMap(null);
+    });
+    removeRoute();
+    apIcons = {};
 }
 
 // Flight selection
@@ -54,12 +57,6 @@ function highlightFlight(flightId) {
     apIcons[flightId].setAnimation(google.maps.Animation.BOUNCE); 
 }
 
-// update airplanes locations
-function updateLocation(flight) {
-    /////// NEED TO CHECK FOR COORDS UPDATE
-    const updatedPosition = new google.maps.LatLng(flight.latitude, flight.longitude);
-    apIcons[flight.flightId].setPosition(updatedPosition);
-}
 
 function drawRoute(flightPlan) {
     const segments = flightPlan.segments;

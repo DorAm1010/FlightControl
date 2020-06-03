@@ -31,75 +31,102 @@
             text-size-adjust: auto;
             text-decoration-color: white;
         }
+        #toastsContainer {
+            position: absolute;
+            top: 0;
+            z-index: 1;
+            width: 70%;
+            opacity : 3;
+        }
+
+        .toastContainer {
+            margin-top: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            padding: 10px;
+            color: white;
+            position: relative;
+            z-index: 1;
+            background-color: #8694FF;
+            opacity: 3;
+        }
+
+        .toastHeader {
+        }
+
+        .toastContent {
+            margin-top: 10px;
+        }
     </style>
     <title>Flight Control</title>
 </head>
 <body>
-   <div class="container-fluid">
-       <!-- Top half of screen -->
-       <div class="row">
-           <!-- For map -->
-           <!-- div class="col-md-9" id="map" style="height:100%; width:100%"-->
-           <div class="col-md-9" id="map" onclick="mapCancelHighlight(event)">
-           </div>
-           <!-- For 'My Flights' -->
-           <div class="col-md-3">
-               <h1 class="display-4">My Flights</h1>
-               <div id="dropzone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" ondragend="dragEndHandler(event)">
-                   <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                       <table class="table table-sm table-hover" id="myFlightsT">
-                           <thead>
-                               <tr>
-                                   <th scope="col">Flight ID</th>
-                                   <th scope="col">Company</th>
-                               </tr>
-                           </thead>
-                           <tbody>
-                           </tbody>
-                       </table>
-                       <img id="dragpic" src="../resources/dnd1.png">
-                   </div>
-               </div>
-           </div>
-       </div>
-       <!-- Bottom half of screen -->
-       <div class="row">
-           <!-- For 'Flight Details' -->
-           <div class="col-md-9">
-               <h1 class="display-4">Flight Details</h1>
-               <table class="table table-md table-hover" id="flightDetails">
-                   <thead>
-                       <tr>
-                           <th scope="col">Flight ID</th>
-                           <th scope="col">Company</th>
-                           <th scope="col">Source</th>
-                           <th scope="col">Destination</th>
-                           <th scope="col">Takeoff time</th>
-                           <th scope="col">Landing time</th>
-                           <th scope="col">Passengers</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                   </tbody>
-               </table>
-           </div>
-           <!-- For External Flights -->
-           <div class="col-md-3">
-               <h1 class="display-4">External Flights</h1>
-               <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                   <table class="table table-sm table-hover" id="externFlightsT">
-                       <thead>
-                           <tr>
-                               <th scope="col">Flight ID</th>
-                               <th scope="col">Company</th>
-                           </tr>
-                       </thead>
-                       <tbody>
-                       </tbody>
-                   </table>
-                   </div>
-               </div>
-           </div>
-   </div>
+    <div id="toastsContainer"></div>
+    <div class="container-fluid">
+        <!-- Top half of screen -->
+        <div class="row">
+            <!-- For map -->
+            <!-- div class="col-md-9" id="map" style="height:100%; width:100%"-->
+            <div class="col-md-9" id="map" onclick="mapCancelHighlight(event)">
+            </div>
+            <!-- For 'My Flights' -->
+            <div class="col-md-3">
+                <h1 class="display-4">My Flights</h1>
+                <div id="dropzone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" ondragend="dragEndHandler(event)">
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                        <table class="table table-sm table-hover" id="myFlightsT">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Flight ID</th>
+                                    <th scope="col">Company</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <img id="dragpic" src="../resources/dnd1.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bottom half of screen -->
+        <div class="row">
+            <!-- For 'Flight Details' -->
+            <div class="col-md-9">
+                <h1 class="display-4">Flight Details</h1>
+                <table class="table table-md table-hover" id="flightDetails">
+                    <thead>
+                        <tr>
+                            <th scope="col">Flight ID</th>
+                            <th scope="col">Company</th>
+                            <th scope="col">Source</th>
+                            <th scope="col">Destination</th>
+                            <th scope="col">Takeoff time</th>
+                            <th scope="col">Landing time</th>
+                            <th scope="col">Passengers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <!-- For External Flights -->
+            <div class="col-md-3">
+                <h1 class="display-4">External Flights</h1>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <table class="table table-sm table-hover" id="externFlightsT">
+                        <thead>
+                            <tr>
+                                <th scope="col">Flight ID</th>
+                                <th scope="col">Company</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
