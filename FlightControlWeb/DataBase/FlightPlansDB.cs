@@ -12,6 +12,8 @@ namespace FlightControlWeb.DataBase
 
         public void Add(FlightPlan toAdd)
         {
+            if (hashtable.ContainsKey(toAdd.HashId()))
+                return;
             hashtable.Add(toAdd.HashId(), toAdd);
         }
 

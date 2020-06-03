@@ -10,6 +10,8 @@ namespace FlightControlWeb.DataBase
         private Hashtable servers = new Hashtable();
         public void Add(Server toAdd)
         {
+            if (servers.ContainsKey(toAdd.Id))
+                return;
             servers.Add(toAdd.Id, toAdd);
         }
 
@@ -20,12 +22,16 @@ namespace FlightControlWeb.DataBase
 
         public IEnumerable<Server> GetAllValues()
         {
+            if (servers.Values.Count == 0)
+                return new List<Server>();
             List<Server> values = servers.Values.Cast<Server>().ToList();
             return values;
         }
 
         public IEnumerable<string> GetAllKeys()
         {
+            if (servers.Keys.Count == 0)
+                return new List<string>();
             List<string> keys = servers.Keys.Cast<string>().ToList();
             return keys;
         }

@@ -1,0 +1,208 @@
+[
+	{
+		"passengers": 1,
+		"company_name": "AirAmrani",
+		"initial_location": {
+			"longitude": 10.10,
+			"latitude": 19.94,
+			"date_time": "2020-06-03T17:00:00Z"
+		},
+		"segments": [
+			{
+				"longitude": 13.234,
+				"latitude": 12.18,
+				"timespan_seconds": 5000
+			},
+			{
+				"longitude": 35.334,
+				"latitude": 31.12,
+				"timespan_seconds": 3210
+			},
+			{
+				"longitude": 38.434,
+				"latitude": 32.06,
+				"timespan_seconds": 1500
+			}
+		]
+	},
+
+	{
+		"passengers": 1,
+		"company_name": "AirAmrani",
+		"initial_location": {
+			"longitude": 10.10,
+			"latitude": 19.94,
+			"date_time": "2020-06-03T17:00:00Z"
+		},
+		"segments": [
+			{
+				"longitude": 13.234,
+				"latitude": 12.18,
+				"timespan_seconds": 5000
+			},
+			{
+				"longitude": 35.334,
+				"latitude": 31.12,
+				"timespan_seconds": 3210
+			},
+			{
+				"longitude": 38.434,
+				"latitude": 32.06,
+				"timespan_seconds": 1500
+			}
+		]
+	},
+
+	{
+		"passengers": 12,
+		"company_name": "MosheCorp",
+		"initial_location": {
+			"longitude": 11.11,
+			"latitude": 12.34,
+			"date_time": "2020-06-03T17:00:00Z"
+		},
+		"segments": [
+			{
+				"longitude": 22.234,
+				"latitude": 32.18,
+				"timespan_seconds": 5000
+			},
+			{
+				"longitude": 30.334,
+				"latitude": 32.12,
+				"timespan_seconds": 3210
+			},
+			{
+				"longitude": 38.434,
+				"latitude": 40.06,
+				"timespan_seconds": 1500
+			}
+		]
+	},
+
+	{
+		"passengers": 275,
+		"company_name": "YallaMaccabi",
+		"initial_location": {
+			"longitude": 10.10,
+			"latitude": 19.94,
+			"date_time": "2020-06-03T17:00:00Z"
+		},
+		"segments": [
+			{
+				"longitude": 13.234,
+				"latitude": 12.18,
+				"timespan_seconds": 5000
+			},
+			{
+				"longitude": 35.334,
+				"latitude": 31.12,
+				"timespan_seconds": 3210
+			},
+			{
+				"longitude": 38.434,
+				"latitude": 32.06,
+				"timespan_seconds": 1500
+			}
+		]
+	},
+
+	{
+		"passengers": 275,
+		"company_name": "YallaMaccabi",
+		"initial_location": {
+			"longitude": 10.11,
+			"latitude": 19.94,
+			"date_time": "2020-06-03T17:00:01Z"
+		},
+		"segments": [
+			{
+				"longitude": 13.234,
+				"latitude": 12.18,
+				"timespan_seconds": 5000
+			},
+			{
+				"longitude": 35.334,
+				"latitude": 31.12,
+				"timespan_seconds": 3210
+			},
+			{
+				"longitude": 38.434,
+				"latitude": 32.06,
+				"timespan_seconds": 1500
+			}
+		]
+	},
+
+	{
+		"passengers": 13,
+		"company_name": "FlatEarthSociety",
+		"initial_location": {
+			"longitude": 0,
+			"latitude": 1,
+			"date_time": "2020-06-03T17:00:00Z"
+		},
+		"segments": [
+			{
+				"longitude": 22.234,
+				"latitude": 33.18,
+				"timespan_seconds": 5000
+			},
+			{
+				"longitude": 78.334,
+				"latitude": 58.12,
+				"timespan_seconds": 6210
+			},
+			{
+				"longitude": 80.434,
+				"latitude": 92.06,
+				"timespan_seconds": 3000
+			}
+		]
+	},
+
+	{
+		"passengers": 1,
+		"company_name": "AirAmrani",
+		"initial_location": {
+			"longitude": 10.10,
+			"latitude": 19.94,
+			"date_time": "2020-06-03T22:00:00Z"
+		},
+		"segments": [
+			{
+				"longitude": 36.234,
+				"latitude": 30.18,
+				"timespan_seconds": 6000
+			},
+			{
+				"longitude": 43,
+				"latitude": 52,
+				"timespan_seconds": 3210
+			},
+			{
+				"longitude": 38.434,
+				"latitude": 32.06,
+				"timespan_seconds": 1500
+			}
+		]
+	},
+
+	{
+		"passengers": 216,
+		"company_name": "SwissAir",
+		"initial_location": {
+			"longitude": 32.006517,
+			"latitude": 34.885265,
+			"date_time": "2020-01-01T22:00:10Z"
+		},
+		"segments": [
+			{
+				"longitude": 33.234,
+				"latitude": 31.18,
+				"timespan_seconds": 650
+			}
+		]
+	}
+]
+ 
