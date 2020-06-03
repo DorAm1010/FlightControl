@@ -6,7 +6,7 @@ namespace FlightControlWeb.Model.Tests
     [TestClass()]
     public class FlightPlanTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void InFlightRelativeToTest()
         {
             DateTime earlierDate = DateTime.UtcNow;
