@@ -53,13 +53,16 @@ namespace FlightControlWeb.Controllers
 
         // GET: api/FlightPlan/id/locations
         [HttpGet("locations/{id}", Name = "GetDestinationAndLandingTime")]
-        public List<string> GetDestinationAndLandingTime(string id)
+        public async Task<List<string>> GetDestinationAndLandingTime(string id)
         {
             List<string> locations = new List<string>();
             int totalFlightInSeconds = 0;
             FlightPlan plan = _dataBase.GetById(id);
             if (plan == null)
+                plan = await GetExternalFlightPlan(id, _idToServer.Get(id));
+            if (plan == null)
                 return null;
+
             List<Segment> segments = plan.Segments;
             int lastSegment = segments.Count() - 1;
             

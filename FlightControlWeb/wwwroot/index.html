@@ -12,25 +12,25 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <meta charset="utf-8">
     <style>
-        /* Always set the map height explicitly to define the size of the div
-        * element that contains the map. */
+        /* Map style */
         #map {
             height: 500px;
             width: 500px;
         }
-        /* Optional: Makes the sample page fill the window.  */
+
         html, body {
             height: 100%;
             width: 100%;
             margin: 0;
             padding: 0;
         }
-
+        /* Popover style */
         .popover {
             text-align: center;
             text-size-adjust: auto;
             text-decoration-color: white;
         }
+        /* Toast style */
         #toastsContainer {
             position: absolute;
             top: 0;
@@ -47,7 +47,7 @@
             color: white;
             position: relative;
             z-index: 1;
-            background-color: #00cc66;
+            background-color: #339933;
             opacity: 3;
         }
 
@@ -66,7 +66,6 @@
         <!-- Top half of screen -->
         <div class="row">
             <!-- For map -->
-            <!-- div class="col-md-9" id="map" style="height:100%; width:100%"-->
             <div class="col-md-9" id="map" onclick="mapCancelHighlight(event)">
             </div>
             <!-- For 'My Flights' -->

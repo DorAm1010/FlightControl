@@ -1,113 +1,50 @@
-﻿// JSON ex.
-let flight1 =
-{
-    "flight_id": "55555",
-    "longitude": 33.244,
-    "latitude": 31.12,
-    "passengers": 216,
-    "company_name": "SwissAir",
-    "date_time": "2020-12-26T23:56:21Z",
-    "is_external": false
-};
-
-let flight2 =
-{
-    "flight_id": "44444",
-    "longitude": 33.244,
-    "latitude": 31.12,
-    "passengers": 216,
-    "company_name": "Dor",
-    "date_time": "2020-12-26T23:56:21Z",
-    "is_external": false
-};
-
-let flight3 =
-{
-    "flight_id": "22222",
-    "longitude": 33.244,
-    "latitude": 31.12,
-    "passengers": 216,
-    "company_name": "Yakir",
-    "date_time": "2020-12-26T23:56:21Z",
-    "is_external": true
-};
-
-let flightPlan1 =
-{
-    "passengers": 216,
-    "company_name": "SwissAir",
-    "initial_location": {
-        "longitude": 32.006517,
-        "latitude": 34.885265,
-        "date_time": "2020-12-26T23:56:21Z"
-    },
-    "segments": [
-        {
-            "longitude": 33.234,
-            "latitude": 31.18,
-            "timespan_seconds": 650
-        }
-    ]
-};
-
-let flightPlan2 =
-{
-    "passengers": 320,
-    "company_name": "Dor",
-    "initial_location": { 
-        "longitude": 31.720005,
-        "latitude": 35.987877,
-        "date_time": "2020-12-26T23:56:21Z"
-    },
-    "segments": [
-        {
-            "longitude": 33.234,
-            "latitude": 31.18,
-            "timespan_seconds": 650
-        }
-    ]
-};
-// JSON ex.
+﻿
+//Global variables
 let progRun;
 let numOfFlights = 0;
 let currentMarkedFlight;
 let lngD;
 let latD;
 let landingTime;
-//Initialize app
+//Initialize the app
 window.onload = function load() {
     $("#dnd").hide();
-    //running = true;
-    //sleep(200);
-    //progRun = true;
+    progRun = true;
     document.getElementById('dragpic').style.display = 'none';
     this.raiseNotification(`Welcome to Flight Control!<br>
     1. You can add Flight Plans by dropping the files at the tables.<br>
     2. You can receive each flight's details by clicking on the desired entry in the list.<br>
     3. You can remove an internal flight by clicking the red button in the raised popup of each entry.`);
     this.initFlights();
-    this.setInterval(function () { updateFlights(); }, 3000);
-    //sleep(150);
-    //this.deleteEndedFlight();
-    //this.updateFlights();
+    this.setInterval(function () { updateFlights(); }, 4000);
 };
 
+// Close the app
+window.onclose = function close() {
+    progRun = false;
+}
 
+// Adding flights to My Flights table
 function addMyFlightsT(flight) {
     let myFlightsT = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
     let row = myFlightsT.insertRow();
     let idCell = row.insertCell();
     let companyCell = row.insertCell();
+    // setting onclick in order to get flight's flightplan
     row.setAttribute("onclick", "getFlightPlan(event)");
     row.id = flight.flightId;
+    // popover - for delete button
     row.setAttribute("data-toggle", "popover");
     idCell.id = flight.flightId;
     idCell.innerText = flight.flightId;
     companyCell.id = flight.flightId;
     companyCell.innerText = flight.companyName;
+    //updating all the popovers (delete buttons of entries)
     updatePopovers(flight.flightId);
 }
 
+// updating all the popovers
+// makes sure only visible flights will have visible popovers (delete buttons)
 function updatePopovers(flightID) {
     $("*").each(function () {
         let popover = $.data(this, "bs.popover");
@@ -132,12 +69,14 @@ function updatePopovers(flightID) {
     });
 }
 
+// Adding flights to External Flights table
 function addExternalFlightsT(flight) {
     let externFlightsT = document.getElementById("externFlightsT").getElementsByTagName('tbody')[0];
     let row = externFlightsT.insertRow();
     let idCell = row.insertCell();
     let companyCell = row.insertCell();
-    row.setAttribute("onclick", "showFlightDetails(event)");
+    // setting onclick in order to get flight's flightplan
+    row.setAttribute("onclick", "getFlightPlan(event)");
     idCell.id = flight.flightId;
     idCell.innerHTML = flight.flightId;
     companyCell.id = flight.flightId;
@@ -151,7 +90,7 @@ function sortFlights(flight) {
     } else if (flight.isExternal === false) {
         addMyFlightsT(flight);
     } else {
-        //raiseNotification("Failed to sort flights");
+        raiseNotification("Failed to sort flights");
     }
 }
 
@@ -164,7 +103,7 @@ function isAlreadyPresent(flightId) {
 }
 
 //GET (flights)
-// receive all flights from server
+// receive all relevant flights (considering time) from server
 function initFlights() {
     let dateTime = new Date().toISOString();
     let flighturl = `../api/Flights?relative_to=${dateTime}&sync_all`;
@@ -188,11 +127,12 @@ function initFlights() {
             });
         })
         .fail(function (reason) {
-            raiseNotification("Failed loading flights");
+            console.log("Failed loading flights");
         });
 }
 
-//POST
+//POST (flightplan)
+// Sends a flight plan to the server
 function sendFlightPlan(flightPlan) {
     let postUrl = "../api/FlightPlan";
     fetch(postUrl, {
@@ -208,12 +148,13 @@ function sendFlightPlan(flightPlan) {
             initFlights();
         })
         .catch((error) => {
-            raiseNotification("Failed sending flight plan");
+            raiseNotification("Failed sending flight plan, retrying..");
             console.error('Error:', error);
         });
 }
 
 //GET (flight plan)
+// asks for a flight plan of a specific flight
 function getFlightPlan(event) {
     if (currentMarkedFlight != null) {
         highlightCancel(currentMarkedFlight);
@@ -233,6 +174,8 @@ function getFlightPlan(event) {
 }
 
 //LOCATIONS
+// extra internal function (works by REST) to get utilities
+// such as landing time and human-readable source and destination (by using google geocoder)
 function getExtra(flightId) {
     let flighturl = `../api/FlightPlan/locations/${flightId}`;
  $.getJSON(flighturl)
@@ -247,6 +190,7 @@ function getExtra(flightId) {
 }
 
 //DELETE
+// deletes a desired flight (from both server and client)
 function deleteFlight(event) {
     let toDel = confirm(`Do you want to delete flight "${event.target.id}" ?`);
     if (toDel != true) {
@@ -270,12 +214,7 @@ function deleteFlight(event) {
     });
 }
 
-// Check for flights that are inactive and remove them
-function removeFlights() {
-
-}
-
-
+// Removes all the tables' entries (in order to populate them with new information from server)
 function removeFlightFromTs() {
     let myFlights = document.getElementById("myFlightsT").getElementsByTagName('tbody')[0];
     myFlights.innerHTML = "";
@@ -285,24 +224,27 @@ function removeFlightFromTs() {
     flightDetails.innerHTML = "";
 }
 
+//Highlight's a desired table entry
 function highlightEntry(flightId) {
     let rowToHighlight = document.getElementById(`${flightId}`);
     rowToHighlight.style.backgroundColor = "#808FFF";
 }
 
+// Cancel's the highlight of a flight by a map click
 function mapCancelHighlight(event) {
     if (currentMarkedFlight != null) {
         highlightCancel(currentMarkedFlight);
     }
 }
 
+// Cancel's the highlight of a flight (tables and map)
 function highlightCancel(flightId) {
     let flightDetails = document.getElementById("flightDetails");
-    // Remove flight details
+    // Remove from flight details
     if (flightDetails.rows.length > 1) {
         flightDetails.deleteRow(1);
     }
-    // Remove row highlight
+    // Remove table row highlight
     let canceledRow = document.getElementById(`${flightId}`);
     canceledRow.style.backgroundColor = "";
     // Remove airplane animation
@@ -311,7 +253,7 @@ function highlightCancel(flightId) {
     currentMarkedFlight = null;
 }
 
-
+// Presents all the flight details in a table
 function showFlightDetails(flightPlan, flightId) {
     getExtra(flightId);
     let flightDetails = document.getElementById("flightDetails").getElementsByTagName('tbody')[0];
@@ -328,12 +270,10 @@ function showFlightDetails(flightPlan, flightId) {
         idCell.innerText = flightId;
         coordsToSource(flightPlan.initialLocation.latitude, flightPlan.initialLocation.longitude);
         sourceCell.innerText = sourceCountry;
-        //sourceCell.innerText = flightPlan.initialLocation.longitude + ", " + flightPlan.initialLocation.latitude;
         companyCell.innerText = flightPlan.companyName;
         takeoffCell.innerText = flightPlan.initialLocation.dateTime;
         passengersCell.innerText = flightPlan.passengers;
         if (landingTime != null && latD != null && lngD != null) {
-        //    destinationCell.innerText = latD + ", " + lngD;
             coordsToDest(latD, lngD);
             destinationCell.innerText = destCountry;
             landingCell.innerText = landingTime;
@@ -347,13 +287,14 @@ function showFlightDetails(flightPlan, flightId) {
 
 
 /*  Drag and Drop functions   */
+// handles dragging a file over the designated area
 function dragOverHandler(event) {
     document.getElementById('myFlightsT').style.display = 'none';
     document.getElementById('dragpic').style.display = 'inline';
     event.preventDefault();
-   // sleep(2000);
 }
 
+// handles dropping a file in the designated area
 function dropHandler(event) {
     event.preventDefault();
     document.getElementById('dragpic').style.display = 'none';
@@ -363,7 +304,7 @@ function dropHandler(event) {
     }
 }
 
-
+// handles end of dragging a file over the designated area
 function dragEndHandler(event) {
     if (!document.hasFocus) {
         event.preventDefault();
@@ -371,26 +312,28 @@ function dragEndHandler(event) {
         document.getElementById('myFlightsT').style.display = 'inline';
     }
 }
-  
 /* End of Drag and Drop functions   */
 
-//Display notifications
+//Display notifications (toasts)
 function raiseNotification(notif) {
+    // creates a toast container
     let toastContainer = $("<div></div>");
     toastContainer.addClass("toastContainer");
-    //
+    // creates a toast header
     let toastHeader = $("<div></div>");
     toastHeader.addClass("toastHeader");
-    toastHeader.html("Flight Control");
+    toastHeader.html("Flight Control Notification:");
     toastContainer.append(toastHeader);
-    //
+    // creates the toast's content
     var toastContent = $("<div></div>");
     toastContent.addClass("toastContent");
     toastContent.html(notif);
     toastContainer.append(toastContent);
+    // can be removed by clicking it
     toastContainer.click(function () {
         toastContainer.remove();
     });
+    // will be removed in 5 seconds
     toastContainer.hide(function () {
         $("#toastsContainer").append(toastContainer);
         toastContainer.fadeIn(500);
@@ -402,19 +345,12 @@ function raiseNotification(notif) {
     }, 5000);
 }
 
-
-
+// An async function thats responsible for refreshing the information
+// the function is running in 4 seconds intervals
 async function updateFlights() {
-    await initFlights();
-}
-
-// Sleep for 'X' ms
-function sleep(milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-        currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
+    while (progRun) {
+        await initFlights();
+    }
 }
 
 
