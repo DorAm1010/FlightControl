@@ -90,6 +90,7 @@ namespace FlightControlWeb.Model
 
         public string HashId()
         {
+            string fid;
             // get hash code of initial location and date and convert it to hexaecimal representation
             int locationHash = (InitialLocation.Longitude + InitialLocation.Latitude).GetHashCode();
             int dateHash = InitialLocation.DateTime.GetHashCode();
@@ -102,7 +103,11 @@ namespace FlightControlWeb.Model
 
             // if id is longer than 10 characters
             if (flightId.Length > 10)
-                flightId = flightId.ToCharArray().Take(10).ToString();
+            {
+                char[] anotherArray = flightId.ToCharArray().Take(10).ToArray();
+                fid = new string(anotherArray);
+                return fid;
+            }
             return flightId;
         }
     }

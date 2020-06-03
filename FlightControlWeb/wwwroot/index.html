@@ -4,12 +4,12 @@
     <script src="webScripts.js?v=2" async defer></script>
     <script src="mapScripts.js?v=2" async defer></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsjtC2fvACm2adotT7dfFunu6MdpBqXQs&callback=initMap" async defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js" ></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <meta name="viewport" content="initial-scale=1.0">
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default" ></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <meta charset="utf-8">
     <style>
         /* Always set the map height explicitly to define the size of the div
@@ -25,81 +25,81 @@
             margin: 0;
             padding: 0;
         }
+
         .popover {
             text-align: center;
             text-size-adjust: auto;
             text-decoration-color: white;
         }
     </style>
-    <title></title>
+    <title>Flight Control</title>
 </head>
 <body>
-    <div class="row justify-content-md-center">
-        <div class="alert alert-info" id="notificationWindow">
-            <strong id="notification"></strong>
-        </div>
-    </div>
-    <div class="container-fluid">
-        <!-- Top half of screen -->
-        <div class="row">
-            <!-- For map -->
-            <!-- div class="col-md-9" id="map" style="height:100%; width:100%"-->
-            <div class="col-md-9" id="map">
-            </div>
-            <!-- For 'My Flights' -->
-            <div class="col-md-3">
-                <button onclick="initFlights(event)">init!</button>
-                <button onclick="sendFlightPlan(event)">send flightP</button>
-                <button onclick="getLocation(event)">get flight Loc</button>
-                <h1 style="font-size:20px">My Flights</h1>
-                <table class="table table-sm table-hover" id="myFlightsT" ondrop="internDrop(event);" ondragover="dragOverHandler(event);">
-                    <thead>
-                        <tr>
-                            <th scope="col">Flight ID</th>
-                            <th scope="col">Company</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <!-- Bottom half of screen -->
-        <div class="row">
-            <!-- For 'Flight Details' -->
-            <div class="col-md-9">
-                <h1 style="font-size:20px">Flight Details</h1>
-                <table class="table table-md table-hover" id="flightDetails">
-                    <thead>
-                        <tr>
-                            <th scope="col">Flight ID</th>
-                            <th scope="col">Company</th>
-                            <th scope="col">Source</th>
-                            <th scope="col">Destination</th>
-                            <th scope="col">Takeoff time</th>
-                            <th scope="col">Landing time</th>
-                            <th scope="col">Passengers</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-            <!-- For External Flights -->
-            <div class="col-md-3">
-                <h1 style="font-size:20px">External Flights</h1>
-                <table class="table table-sm table-hover" id="externFlightsT" ondrop="externDrop(event);" ondragover="dragOverHandler(event);">
-                    <thead>
-                        <tr>
-                            <th scope="col">Flight ID</th>
-                            <th scope="col">Company</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+   <div class="container-fluid">
+       <!-- Top half of screen -->
+       <div class="row">
+           <!-- For map -->
+           <!-- div class="col-md-9" id="map" style="height:100%; width:100%"-->
+           <div class="col-md-9" id="map" onclick="mapCancelHighlight(event)">
+           </div>
+           <!-- For 'My Flights' -->
+           <div class="col-md-3">
+               <h1 class="display-4">My Flights</h1>
+               <div id="dropzone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" ondragend="dragEndHandler(event)">
+                   <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                       <table class="table table-sm table-hover" id="myFlightsT">
+                           <thead>
+                               <tr>
+                                   <th scope="col">Flight ID</th>
+                                   <th scope="col">Company</th>
+                               </tr>
+                           </thead>
+                           <tbody>
+                           </tbody>
+                       </table>
+                       <img id="dragpic" src="../resources/dnd1.png">
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!-- Bottom half of screen -->
+       <div class="row">
+           <!-- For 'Flight Details' -->
+           <div class="col-md-9">
+               <h1 class="display-4">Flight Details</h1>
+               <table class="table table-md table-hover" id="flightDetails">
+                   <thead>
+                       <tr>
+                           <th scope="col">Flight ID</th>
+                           <th scope="col">Company</th>
+                           <th scope="col">Source</th>
+                           <th scope="col">Destination</th>
+                           <th scope="col">Takeoff time</th>
+                           <th scope="col">Landing time</th>
+                           <th scope="col">Passengers</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                   </tbody>
+               </table>
+           </div>
+           <!-- For External Flights -->
+           <div class="col-md-3">
+               <h1 class="display-4">External Flights</h1>
+               <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                   <table class="table table-sm table-hover" id="externFlightsT">
+                       <thead>
+                           <tr>
+                               <th scope="col">Flight ID</th>
+                               <th scope="col">Company</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                       </tbody>
+                   </table>
+                   </div>
+               </div>
+           </div>
+   </div>
 </body>
 </html>
