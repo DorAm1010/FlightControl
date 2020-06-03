@@ -24,6 +24,7 @@ namespace FlightControlWeb
             services.AddMemoryCache();
             services.AddSingleton(typeof(IDataBase<string, FlightPlan>), typeof(FlightPlansDB));
             services.AddSingleton(typeof(IDataBase<string, Server>), typeof(ServersDB));
+            services.AddSingleton(typeof(IIdToServer<string, string>), typeof(IdToServerImp));
             services.AddControllers();
         }
 
