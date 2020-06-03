@@ -114,7 +114,7 @@ function updatePopovers(flightID) {
         delay: { "show": 200, "hide": 1500 },
         content: function () {
             let delB = document.createElement("button");
-            delB.value = "X";
+            delB.innerText = "X";
             delB.id = flightID;
             delB.className = "btn btn-danger";
             delB.setAttribute("onclick", "deleteFlight(event)");
@@ -157,7 +157,8 @@ function isAlreadyPresent(flightId) {
 //GET (flights)
 // receive all flights from server
 function initFlights() {
-    let flighturl = "../api/Flights?relative_to=2020-05-26T12:00:00Z&sync_all";
+    let dateTime = new Date().toISOString();
+    let flighturl = `../api/Flights?relative_to=${dateTime}&sync_all`;
     $.getJSON(flighturl)
         .done(function (flights) {
             flights.forEach(function (flight) {
