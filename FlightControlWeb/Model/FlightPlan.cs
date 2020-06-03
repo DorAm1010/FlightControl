@@ -62,7 +62,7 @@ namespace FlightControlWeb.Model
             return GetCurrentCoordinates(current, last, timePassedInFlight - relativeDifferenceInSecs);
         }
 
-        private Tuple<double, double> GetCurrentCoordinates(Segment current, Segment last, int secsInSegment)
+        public Tuple<double, double> GetCurrentCoordinates(Segment current, Segment last, int secsInSegment)
         {
             double currentLongitude, currentLatitude, longitudeDifference, latitudeDifference, timespan, secs;
             timespan = (double)current.TimeSpan;

@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace FlightControlWeb.Controllers
 {
@@ -12,19 +14,41 @@ namespace FlightControlWeb.Controllers
     [ApiController]
     public class FlightPlanController : ControllerBase
     {
-        MockFlightPlanDB mdb = new MockFlightPlanDB();
+        //MockFlightPlanDB mdb = new MockFlightPlanDB();
         private IDataBase<string, FlightPlan> _dataBase;
-        public FlightPlanController(IDataBase<string, FlightPlan> dataBase)
+        private IIdToServer<string, string> _idToServer;
+        
+        public FlightPlanController(IDataBase<string, FlightPlan> dataBase,IIdToServer<string, string> idToServer)
         {
             _dataBase = dataBase;
+            _idToServer = idToServer;
         }
 
         // GET: api/FlightPlan/{flight_id_format}
         [HttpGet("{id}", Name = "Get")]
-        public FlightPlan Get(string id)
+        public async Task<FlightPlan> Get(string id)
         {
-            return mdb.Get(id);
-            //return _dataBase.GetById(id);
+            //return mdb.Get(id);
+            FlightPlan plan = _dataBase.GetById(id);
+            if (plan != null)
+                return plan;
+            string externalUrl = _idToServer.Get(id);
+            plan = await GetExternalFlightPlan(id, externalUrl);
+            return plan;
+        }
+
+        private async Task<FlightPlan> GetExternalFlightPlan(string id, string serverUrl)
+        {
+            HttpClient client = new HttpClient();
+            string url = serverUrl + "/api/FlightPlan/" + id;
+            HttpResponseMessage response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                string flightsString = await response.Content.ReadAsStringAsync();
+                FlightPlan plan = JsonConvert.DeserializeObject<FlightPlan>(flightsString);
+                return plan;
+            }
+            return null;
         }
 
         // GET: api/FlightPlan/id/locations
