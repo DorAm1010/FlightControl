@@ -14,7 +14,33 @@ namespace FlightControlWeb.DataBase
                 InitialLocation = new InitialLocation {
                     Longitude = 10.10,
                     Latitude = 19.94,
-                    DateTime = DateTime.Parse("2020-06-01T19:50:01Z").ToUniversalTime()
+                    DateTime = DateTime.UtcNow
+                },
+                Segments = new List<Segment>{
+                    new Segment {
+                        Longitude = 13.234,
+                        Latitude = 12.18,
+                        TimeSpan = 500
+                    },
+                    new Segment {
+                        Longitude = 35.334,
+                        Latitude = 32.43523563,
+                        TimeSpan = 1000
+                    },
+                    new Segment {
+                        Longitude = 60.234,
+                        Latitude = 50.18,
+                        TimeSpan = 2500
+                    }
+                }
+            },
+            new FlightPlan {
+                Passengers = 1,
+                CompanyName = "AirAmrani",
+                InitialLocation = new InitialLocation {
+                    Longitude = 10.10,
+                    Latitude = 19.94,
+                    DateTime = DateTime.UtcNow
                 },
                 Segments = new List<Segment>{
                     new Segment {
@@ -41,7 +67,7 @@ namespace FlightControlWeb.DataBase
                 InitialLocation = new InitialLocation {
                     Longitude = 16.7,
                     Latitude = 19.93,
-                    DateTime = DateTime.Parse("2020-06-01T19:50:01Z").ToUniversalTime()
+                    DateTime = DateTime.UtcNow
                 },
                 Segments = new List<Segment>{
                     new Segment {
@@ -68,7 +94,7 @@ namespace FlightControlWeb.DataBase
                 InitialLocation = new InitialLocation {
                     Longitude = 0.0,
                     Latitude = 0,
-                    DateTime = DateTime.Parse("2020-06-01T19:50:01Z").ToUniversalTime()
+                    DateTime = DateTime.UtcNow
                 },
                 Segments = new List<Segment>{
                     new Segment {

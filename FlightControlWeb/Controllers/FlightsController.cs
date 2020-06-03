@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace FlightControlWeb.Controllers
 {
@@ -16,7 +17,7 @@ namespace FlightControlWeb.Controllers
         private IDataBase<string, FlightPlan> _flightPlansDataBase;
         private IDataBase<string, Server> _serversDataBase;
 
-        //private MockFlightsDB mock = new MockFlightsDB();
+        private MockFlightsDB mock = new MockFlightsDB();
         public FlightsController(IDataBase<string, FlightPlan> flightPlansDataBase, IDataBase<string, Server> serversDataBase)
         {
             _flightPlansDataBase = flightPlansDataBase;
@@ -29,7 +30,7 @@ namespace FlightControlWeb.Controllers
         public async Task<IEnumerable<Flight>> Get([FromQuery] DateTime relative_to)
         {
             bool isExternal = Request.QueryString.Value.Contains("sync_all");
-            DateTime universal = relative_to.ToUniversalTime();
+            DateTime universal = relative_to;
             List<Flight> flights = new List<Flight>();
             List<string> flightsIDs = (List<string>)_flightPlansDataBase.GetAllKeys();
             foreach (string id in flightsIDs)
@@ -49,7 +50,7 @@ namespace FlightControlWeb.Controllers
             return flights;
         }
 
-        private async Task<List<Flight>> GetExternalFlights(DateTime relative_to)
+        public async Task<List<Flight>> GetExternalFlights(DateTime relative_to)
         {
             HttpClient client = new HttpClient();
             List<Flight> flights = new List<Flight>();

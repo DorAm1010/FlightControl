@@ -26,17 +26,27 @@ namespace FlightControlWeb.Controllers
         }
 
         // GET: api/FlightPlan/id/locations
-        [HttpGet("locations/{id}", Name = "GetSourceAndDestination")]
-        public List<double> GetSourceAndDestination(string id)
+        [HttpGet("locations/{id}", Name = "GetDestinationAndLandingTime")]
+        public List<string> GetDestinationAndLandingTime(string id)
         {
-            List<double> locations = new List<double>();
+            List<string> locations = new List<string>();
+            int totalFlightInSeconds = 0;
             FlightPlan plan = _dataBase.GetById(id);
-            int lastSegment = plan.Segments.Count() - 1;
+            if (plan == null)
+                return null;
+            List<Segment> segments = plan.Segments;
+            int lastSegment = segments.Count() - 1;
+            
+            locations.Add(segments[lastSegment].Longitude.ToString());
+            locations.Add(segments[lastSegment].Latitude.ToString());
 
-            locations.Add(plan.InitialLocation.Longitude);
-            locations.Add(plan.InitialLocation.Latitude);
-            locations.Add(plan.Segments[lastSegment].Longitude);
-            locations.Add(plan.Segments[lastSegment].Latitude);
+
+            for (int i = 0; i < segments.Count; i++)
+                totalFlightInSeconds += segments[i].TimeSpan;
+
+            DateTime landingTime = plan.InitialLocation.DateTime.AddSeconds(totalFlightInSeconds);
+            
+            locations.Add(landingTime.ToString("yyyy-MM-ddTHH:mm:ssZ"));
 
             return locations;
         }
@@ -47,11 +57,14 @@ namespace FlightControlWeb.Controllers
         {
             var json = value.ToString();
             FlightPlan flightPlan = JsonConvert.DeserializeObject<FlightPlan>(json);
-            
-            _dataBase.Add(flightPlan);
-            if (_dataBase.GetById(flightPlan.HashId()) == null)
-                return BadRequest(value);
-            return Ok(value);
+            try
+            {
+                _dataBase.Add(flightPlan);
+            } catch (NullReferenceException)
+            {
+                return BadRequest("Please Check Input File!");
+            }
+            return Ok("Flight Plan With ID " + flightPlan.HashId() + " Has Been Added To DataBase");
         }
     }
 }
